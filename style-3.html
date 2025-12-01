@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop AI cho UX/UI | Figma → Live Demo trong 30 phút</title>
+    <meta name="description" content="Workshop thực chiến: Biến Figma design thành website chạy thật, explore nhiều options nhanh x10. 10/12/2025, 19:30, Online. 249K.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pop-yellow': '#FFDE59',
+                        'pop-red': '#FF5757',
+                        'pop-blue': '#5271FF',
+                        'pop-green': '#7ED957',
+                        'pop-purple': '#CB6CE6',
+                        'pop-orange': '#FF914D',
+                        'pop-pink': '#FF66C4',
+                        'pop-cyan': '#38B6FF',
+                    },
+                    fontFamily: {
+                        mega: ['Lexend Mega', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                        body: ['Public Sans', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'brutal': '4px 4px 0px 0px #000000',
+                        'brutal-lg': '8px 8px 0px 0px #000000',
+                        'brutal-xl': '12px 12px 0px 0px #000000',
+                        'brutal-hover': '2px 2px 0px 0px #000000',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            font-family: 'Public Sans', sans-serif;
+        }
+        
+        body {
+            background: #FFFBEB;
+            overflow-x: hidden;
+        }
+        
+        .font-mega {
+            font-family: 'Lexend Mega', sans-serif;
+        }
+        
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+        
+        /* Brutal card hover */
+        .brutal-card {
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        
+        .brutal-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px #000000;
+        }
+        
+        .brutal-card:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px #000000;
+        }
+        
+        /* Marquee */
+        .marquee {
+            animation: marquee 20s linear infinite;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Rotate on scroll */
+        .tilt-left { transform: rotate(-2deg); }
+        .tilt-right { transform: rotate(2deg); }
+        .tilt-left-sm { transform: rotate(-1deg); }
+        .tilt-right-sm { transform: rotate(1deg); }
+        
+        /* Sticker effect */
+        .sticker {
+            transform: rotate(var(--rotation, 3deg));
+            transition: transform 0.2s ease;
+        }
+        
+        .sticker:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+        
+        /* Squiggle underline */
+        .squiggle {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12'%3E%3Cpath d='M0 6 Q 12.5 0, 25 6 T 50 6 T 75 6 T 100 6' stroke='%23FF5757' stroke-width='3' fill='none'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-position: bottom;
+            background-size: 50px 8px;
+            padding-bottom: 8px;
+        }
+        
+        /* Checkbox style */
+        .checkbox-brutal {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #000;
+            background: #7ED957;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Noise texture overlay */
+        .noise::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        
+        /* Grid pattern */
+        .grid-bg {
+            background-image: 
+                linear-gradient(to right, #00000008 1px, transparent 1px),
+                linear-gradient(to bottom, #00000008 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        /* Animated border */
+        @keyframes borderDance {
+            0%, 100% { border-style: solid; }
+            50% { border-style: dashed; }
+        }
+        
+        .border-dance:hover {
+            animation: borderDance 0.5s steps(1) infinite;
+        }
+        
+        /* Tab styles */
+        .tab-brutal.active {
+            background: #FFDE59;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px 0px #000000;
+        }
+        
+        /* Number rotation */
+        .num-rotate {
+            display: inline-block;
+            animation: numWobble 2s ease-in-out infinite;
+        }
+        
+        @keyframes numWobble {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .marquee, .num-rotate { animation: none; }
+            .sticker:hover { transform: none; }
+        }
+        
+        /* Cursor */
+        .cursor-brutal {
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 4 L12 20 L14 14 L20 12 Z' fill='%23FF5757' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 4 4, auto;
+        }
+    </style>
+</head>
+<body class="grid-bg noise relative">
+    
+    <!-- Marquee Banner -->
+    <div class="bg-black text-white py-2 overflow-hidden">
+        <div class="marquee whitespace-nowrap">
+            <span class="inline-block">
+                🔥 WORKSHOP AI CHO DESIGNER 🔥 FIGMA → LIVE DEMO 🔥 10/12/2025 🔥 CHỈ 249K 🔥 30 SLOTS 🔥 
+                🔥 WORKSHOP AI CHO DESIGNER 🔥 FIGMA → LIVE DEMO 🔥 10/12/2025 🔥 CHỈ 249K 🔥 30 SLOTS 🔥 
+            </span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-pop-yellow border-b-4 border-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="#" class="font-mega text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+                    <span class="bg-black text-pop-yellow px-2 py-1">AI</span>
+                    <span>Workshop</span>
+                </a>
+                <a href="#pricing" class="bg-pop-red text-white font-bold px-6 py-3 border-4 border-black shadow-brutal brutal-card cursor-pointer uppercase text-sm tracking-wide">
+                    Đăng ký ngay →
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <!-- Floating stickers -->
+        <div class="absolute top-10 right-10 sticker hidden lg:block" style="--rotation: 12deg;">
+            <div class="bg-pop-green border-4 border-black shadow-brutal px-4 py-2 font-mono text-sm font-bold">
+                LIVE 🔴
+            </div>
+        </div>
+        <div class="absolute bottom-20 left-10 sticker hidden lg:block" style="--rotation: -8deg;">
+            <div class="bg-pop-pink border-4 border-black shadow-brutal px-4 py-2 font-mono text-sm font-bold">
+                NO CODE ✨
+            </div>
+        </div>
+        <div class="absolute top-1/3 right-20 sticker hidden lg:block" style="--rotation: -5deg;">
+            <div class="bg-pop-cyan border-4 border-black shadow-brutal px-4 py-2 font-mono text-sm font-bold">
+                2 TIẾNG ⏰
+            </div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Left -->
+                <div class="tilt-left-sm">
+                    <!-- Badge -->
+                    <div class="inline-block bg-black text-pop-yellow px-4 py-2 font-mono text-sm font-bold mb-6 border-dance border-4 border-black">
+                        📅 THỨ TƯ, 10/12/2025 • 19:30
+                    </div>
+                    
+                    <!-- Headline -->
+                    <h1 class="font-mega text-5xl sm:text-6xl lg:text-7xl font-black uppercase leading-[0.9] mb-6">
+                        Figma →<br>
+                        <span class="squiggle">Live Demo</span><br>
+                        <span class="inline-block bg-pop-red text-white px-4 py-2 -rotate-2">trong 30'</span>
+                    </h1>
+                    
+                    <!-- Subheadline -->
+                    <p class="text-lg sm:text-xl font-medium mb-8 max-w-lg border-l-4 border-black pl-4">
+                        Workshop thực chiến cho UX/UI Designer: Dùng AI để biến thiết kế thành website chạy thật, explore nhiều options nhanh <span class="bg-pop-yellow px-1 font-bold">x10</span>
+                    </p>
+                    
+                    <!-- CTA -->
+                    <div class="flex flex-wrap gap-4 mb-8">
+                        <a href="#pricing" class="bg-pop-blue text-white font-bold px-8 py-4 border-4 border-black shadow-brutal-lg brutal-card cursor-pointer uppercase text-lg inline-flex items-center gap-3">
+                            Đăng ký — 249K
+                            <span class="text-2xl">→</span>
+                        </a>
+                        <a href="#demo" class="bg-white font-bold px-8 py-4 border-4 border-black shadow-brutal brutal-card cursor-pointer uppercase text-lg inline-flex items-center gap-3">
+                            <span class="text-2xl">▶</span>
+                            Xem Demo
+                        </a>
+                    </div>
+                    
+                    <!-- Info badges -->
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-pop-purple text-white px-3 py-1 border-2 border-black font-mono text-sm">📍 Online/Zoom</span>
+                        <span class="bg-pop-orange text-white px-3 py-1 border-2 border-black font-mono text-sm">⏱️ 2 tiếng</span>
+                        <span class="bg-pop-green px-3 py-1 border-2 border-black font-mono text-sm">🎁 Recording</span>
+                    </div>
+                </div>
+                
+                <!-- Right - Visual -->
+                <div class="relative tilt-right hidden lg:block">
+                    <!-- Main card -->
+                    <div class="bg-white border-4 border-black shadow-brutal-xl p-6 relative">
+                        <!-- Window controls -->
+                        <div class="flex gap-2 mb-4">
+                            <div class="w-4 h-4 bg-pop-red border-2 border-black"></div>
+                            <div class="w-4 h-4 bg-pop-yellow border-2 border-black"></div>
+                            <div class="w-4 h-4 bg-pop-green border-2 border-black"></div>
+                        </div>
+                        
+                        <!-- Code -->
+                        <div class="font-mono text-sm space-y-2 bg-black text-green-400 p-4 border-2 border-black">
+                            <p><span class="text-pop-yellow">const</span> design = figma.<span class="text-pop-cyan">export</span>();</p>
+                            <p><span class="text-pop-yellow">const</span> website = ai.<span class="text-pop-cyan">generate</span>(design);</p>
+                            <p><span class="text-pop-yellow">const</span> url = <span class="text-pop-cyan">deploy</span>(website);</p>
+                            <p class="text-gray-500">// ✅ Done in 30 minutes</p>
+                        </div>
+                        
+                        <!-- Stats -->
+                        <div class="grid grid-cols-3 gap-2 mt-4">
+                            <div class="bg-pop-yellow border-2 border-black p-3 text-center">
+                                <div class="font-mega text-2xl font-black num-rotate">250+</div>
+                                <div class="text-xs font-bold uppercase">Học viên</div>
+                            </div>
+                            <div class="bg-pop-green border-2 border-black p-3 text-center">
+                                <div class="font-mega text-2xl font-black num-rotate" style="animation-delay: 0.3s;">15+</div>
+                                <div class="text-xs font-bold uppercase">Năm exp</div>
+                            </div>
+                            <div class="bg-pop-cyan border-2 border-black p-3 text-center">
+                                <div class="font-mega text-2xl font-black num-rotate" style="animation-delay: 0.6s;">50%</div>
+                                <div class="text-xs font-bold uppercase">Time saved</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative elements -->
+                    <div class="absolute -top-4 -right-4 bg-pop-red border-4 border-black p-4 rotate-12 shadow-brutal">
+                        <span class="font-mega text-white text-2xl">🔥</span>
+                    </div>
+                    <div class="absolute -bottom-4 -left-4 bg-pop-blue border-4 border-black p-3 -rotate-6 shadow-brutal">
+                        <span class="font-mono text-white text-sm font-bold">AI-POWERED</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-pop-red border-y-4 border-black">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="inline-block bg-black text-white px-4 py-2 font-mono text-sm font-bold mb-4 rotate-1">VẤN ĐỀ 😤</span>
+                <h2 class="font-mega text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase">
+                    Bạn đang stuck ở đâu?
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white border-4 border-black shadow-brutal-lg p-6 brutal-card cursor-pointer tilt-left-sm">
+                    <div class="bg-black text-pop-yellow w-16 h-16 flex items-center justify-center font-mega text-3xl font-black mb-4 -rotate-3">
+                        01
+                    </div>
+                    <h3 class="font-mega text-lg font-bold uppercase mb-3">Demo cho khách = Static 😴</h3>
+                    <p class="text-gray-700">Client hỏi "click vào nó chạy sao?" mà prototype Figma không đủ real</p>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="bg-pop-yellow border-4 border-black shadow-brutal-lg p-6 brutal-card cursor-pointer">
+                    <div class="bg-black text-pop-yellow w-16 h-16 flex items-center justify-center font-mega text-3xl font-black mb-4 rotate-2">
+                        02
+                    </div>
+                    <h3 class="font-mega text-lg font-bold uppercase mb-3">Explore options = Tốn time ⏰</h3>
+                    <p class="text-gray-800">Mỗi option mất 2-3 ngày, deadline không cho phép thử nhiều</p>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="bg-white border-4 border-black shadow-brutal-lg p-6 brutal-card cursor-pointer tilt-right-sm">
+                    <div class="bg-black text-pop-yellow w-16 h-16 flex items-center justify-center font-mega text-3xl font-black mb-4 -rotate-2">
+                        03
+                    </div>
+                    <h3 class="font-mega text-lg font-bold uppercase mb-3">Portfolio = Toàn mockup 📸</h3>
+                    <p class="text-gray-700">Recruiter muốn thấy product thật, không chỉ hình đẹp Behance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="inline-block bg-pop-green px-4 py-2 font-mono text-sm font-bold mb-4 border-4 border-black -rotate-1">GIẢI PHÁP 🚀</span>
+                <h2 class="font-mega text-3xl sm:text-4xl lg:text-5xl font-black uppercase">
+                    AI làm code,<br>
+                    <span class="bg-pop-blue text-white px-4 py-1 inline-block rotate-1">Bạn làm design</span>
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-pop-cyan border-4 border-black shadow-brutal-lg p-8 brutal-card cursor-pointer text-center">
+                    <div class="text-6xl mb-4">🎯</div>
+                    <h3 class="font-mega text-xl font-bold uppercase mb-3">Figma → Live Site</h3>
+                    <p>Export → AI code → Deploy. Click, scroll, interact được ngay</p>
+                </div>
+                
+                <div class="bg-pop-purple text-white border-4 border-black shadow-brutal-lg p-8 brutal-card cursor-pointer text-center">
+                    <div class="text-6xl mb-4">⚡</div>
+                    <h3 class="font-mega text-xl font-bold uppercase mb-3">Explore x10</h3>
+                    <p>1 prompt = 1 option. 30 phút có 3-4 variations</p>
+                </div>
+                
+                <div class="bg-pop-orange text-white border-4 border-black shadow-brutal-lg p-8 brutal-card cursor-pointer text-center">
+                    <div class="text-6xl mb-4">🏆</div>
+                    <h3 class="font-mega text-xl font-bold uppercase mb-3">Portfolio Live</h3>
+                    <p>Mockup → Website thật. Có URL gửi recruiter</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-16 px-4 sm:px-6 lg:px-8 bg-pop-blue border-y-4 border-black">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-10">
+                <span class="inline-block bg-black text-pop-yellow px-4 py-2 font-mono text-sm font-bold mb-4 rotate-2">DEMO 👀</span>
+                <h2 class="font-mega text-3xl sm:text-4xl font-black text-white uppercase">
+                    Xem workflow trước
+                </h2>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="flex flex-wrap justify-center gap-2 mb-6">
+                <button onclick="switchTab(0)" class="tab-brutal active bg-white font-bold px-6 py-3 border-4 border-black cursor-pointer uppercase text-sm" data-tab="0">
+                    Figma → Demo
+                </button>
+                <button onclick="switchTab(1)" class="tab-brutal bg-white font-bold px-6 py-3 border-4 border-black cursor-pointer uppercase text-sm" data-tab="1">
+                    Explore Options
+                </button>
+                <button onclick="switchTab(2)" class="tab-brutal bg-white font-bold px-6 py-3 border-4 border-black cursor-pointer uppercase text-sm" data-tab="2">
+                    Output
+                </button>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="bg-white border-4 border-black shadow-brutal-xl p-6 sm:p-10">
+                <!-- Tab 1 -->
+                <div class="tab-content" data-content="0">
+                    <div class="flex flex-col lg:flex-row items-center justify-center gap-6 mb-8">
+                        <div class="bg-gray-100 border-4 border-black p-6 text-center">
+                            <div class="text-4xl mb-2">📐</div>
+                            <span class="font-mono text-sm font-bold">FIGMA</span>
+                        </div>
+                        <div class="text-4xl font-bold animate-pulse">→</div>
+                        <div class="bg-pop-green border-4 border-black p-6 text-center shadow-brutal">
+                            <div class="text-4xl mb-2">🌐</div>
+                            <span class="font-mono text-sm font-bold">LIVE SITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid sm:grid-cols-4 gap-3">
+                        <div class="bg-pop-yellow border-2 border-black p-4">
+                            <span class="font-mega text-2xl font-black">01</span>
+                            <p class="text-sm font-bold mt-1">Screenshot từ Figma</p>
+                        </div>
+                        <div class="bg-pop-cyan border-2 border-black p-4">
+                            <span class="font-mega text-2xl font-black">02</span>
+                            <p class="text-sm font-bold mt-1">Describe cho AI</p>
+                        </div>
+                        <div class="bg-pop-purple text-white border-2 border-black p-4">
+                            <span class="font-mega text-2xl font-black">03</span>
+                            <p class="text-sm font-bold mt-1">Generate code</p>
+                        </div>
+                        <div class="bg-pop-green border-2 border-black p-4">
+                            <span class="font-mega text-2xl font-black">04</span>
+                            <p class="text-sm font-bold mt-1">Deploy & Share</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2 -->
+                <div class="tab-content hidden" data-content="1">
+                    <p class="text-center font-bold mb-6">Brief: "Landing page app fitness" → 4 hướng trong 1 giờ:</p>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <div class="aspect-video bg-gray-100 border-4 border-black flex items-center justify-center font-bold">Minimalist</div>
+                        <div class="aspect-video bg-black text-white border-4 border-black flex items-center justify-center font-bold">Dark Mode</div>
+                        <div class="aspect-video bg-gradient-to-br from-pop-purple to-pop-blue border-4 border-black flex items-center justify-center font-bold text-white">Gradient</div>
+                        <div class="aspect-video bg-pop-yellow border-4 border-black flex items-center justify-center font-bold">Playful</div>
+                    </div>
+                    <p class="text-center font-mono font-bold bg-pop-green border-2 border-black p-3">→ 4 LIVE DEMOS • 1 GIỜ THAY VÌ 1 TUẦN 🚀</p>
+                </div>
+                
+                <!-- Tab 3 -->
+                <div class="tab-content hidden" data-content="2">
+                    <div class="max-w-md mx-auto space-y-3">
+                        <div class="flex items-center gap-3 bg-pop-green border-2 border-black p-3">
+                            <div class="checkbox-brutal">✓</div>
+                            <span class="font-bold">1 Portfolio website live</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-pop-yellow border-2 border-black p-3">
+                            <div class="checkbox-brutal">✓</div>
+                            <span class="font-bold">3 Landing page variations</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-pop-cyan border-2 border-black p-3">
+                            <div class="checkbox-brutal">✓</div>
+                            <span class="font-bold">Workflow Figma → AI → Deploy</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-pop-purple text-white border-2 border-black p-3">
+                            <div class="checkbox-brutal">✓</div>
+                            <span class="font-bold">Prompt templates</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-pop-orange text-white border-2 border-black p-3">
+                            <div class="checkbox-brutal">✓</div>
+                            <span class="font-bold">Recording xem lại</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agenda Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="inline-block bg-pop-orange text-white px-4 py-2 font-mono text-sm font-bold mb-4 border-4 border-black -rotate-2">AGENDA 📋</span>
+                <h2 class="font-mega text-3xl sm:text-4xl font-black uppercase">
+                    2 giờ <span class="bg-black text-pop-yellow px-2">thực hành</span>
+                </h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="flex gap-4 items-stretch brutal-card cursor-pointer">
+                    <div class="bg-pop-yellow border-4 border-black p-4 flex items-center justify-center min-w-[80px] shadow-brutal">
+                        <span class="font-mega text-xl font-black">15'</span>
+                    </div>
+                    <div class="flex-1 bg-white border-4 border-black p-4">
+                        <h3 class="font-mega font-bold uppercase">Setup & Mindset</h3>
+                        <p class="text-gray-600 text-sm">Cách describe design cho AI hiểu đúng ý</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-stretch brutal-card cursor-pointer">
+                    <div class="bg-pop-green border-4 border-black p-4 flex items-center justify-center min-w-[80px] shadow-brutal">
+                        <span class="font-mega text-xl font-black">30'</span>
+                    </div>
+                    <div class="flex-1 bg-white border-4 border-black p-4">
+                        <h3 class="font-mega font-bold uppercase">Use Case 1: Figma → Live</h3>
+                        <p class="text-gray-600 text-sm">Chuyển design thành website chạy thật</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-stretch brutal-card cursor-pointer">
+                    <div class="bg-pop-cyan border-4 border-black p-4 flex items-center justify-center min-w-[80px] shadow-brutal">
+                        <span class="font-mega text-xl font-black">30'</span>
+                    </div>
+                    <div class="flex-1 bg-white border-4 border-black p-4">
+                        <h3 class="font-mega font-bold uppercase">Use Case 2: Explore Options</h3>
+                        <p class="text-gray-600 text-sm">Tạo 3 variations từ 1 concept gốc</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-stretch brutal-card cursor-pointer">
+                    <div class="bg-pop-purple text-white border-4 border-black p-4 flex items-center justify-center min-w-[80px] shadow-brutal">
+                        <span class="font-mega text-xl font-black">30'</span>
+                    </div>
+                    <div class="flex-1 bg-white border-4 border-black p-4">
+                        <h3 class="font-mega font-bold uppercase">Build Portfolio</h3>
+                        <p class="text-gray-600 text-sm">Gom demos + deploy GitHub Pages</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-stretch brutal-card cursor-pointer">
+                    <div class="bg-pop-red text-white border-4 border-black p-4 flex items-center justify-center min-w-[80px] shadow-brutal">
+                        <span class="font-mega text-xl font-black">15'</span>
+                    </div>
+                    <div class="flex-1 bg-white border-4 border-black p-4">
+                        <h3 class="font-mega font-bold uppercase">Q&A + Tips</h3>
+                        <p class="text-gray-600 text-sm">Workflow tối ưu, free tier hiệu quả</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trainer Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-pop-purple border-y-4 border-black">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white border-4 border-black shadow-brutal-xl p-8 sm:p-12 tilt-right-sm">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <!-- Avatar -->
+                    <div class="relative">
+                        <div class="w-32 h-32 bg-pop-yellow border-4 border-black flex items-center justify-center -rotate-3">
+                            <span class="font-mega text-6xl font-black">T</span>
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 bg-pop-red text-white px-3 py-1 border-2 border-black font-mono text-xs font-bold rotate-6">
+                            TRAINER
+                        </div>
+                    </div>
+                    
+                    <!-- Info -->
+                    <div class="flex-1 text-center md:text-left">
+                        <h3 class="font-mega text-3xl font-black uppercase">Tony</h3>
+                        <p class="text-gray-600 font-bold mb-4">AI Educator & Entrepreneur</p>
+                        
+                        <!-- Stats -->
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
+                            <span class="bg-pop-yellow px-3 py-1 border-2 border-black font-mono text-sm font-bold">15+ năm dev</span>
+                            <span class="bg-pop-green px-3 py-1 border-2 border-black font-mono text-sm font-bold">10+ năm automation</span>
+                            <span class="bg-pop-cyan px-3 py-1 border-2 border-black font-mono text-sm font-bold">250+ học viên</span>
+                        </div>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                            <span class="bg-black text-white px-2 py-1 text-xs font-bold">CTO @ GOHA</span>
+                            <span class="bg-black text-white px-2 py-1 text-xs font-bold">Founder @ Vân Tay Media</span>
+                            <span class="bg-black text-white px-2 py-1 text-xs font-bold">MSE AI @ FPT</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quote -->
+                <blockquote class="mt-8 text-center text-lg font-medium border-l-4 border-black pl-4 bg-gray-50 p-4">
+                    "Tôi đã tiết kiệm <span class="bg-pop-yellow px-1 font-bold">50%+ thời gian</span> ở 2 agency bằng AI automation. Workshop này là workflow tôi dùng <span class="bg-pop-green px-1 font-bold">hàng ngày</span>."
+                </blockquote>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="inline-block bg-pop-pink text-white px-4 py-2 font-mono text-sm font-bold mb-4 border-4 border-black rotate-1">FAQ ❓</span>
+                <h2 class="font-mega text-3xl sm:text-4xl font-black uppercase">Hỏi đáp nhanh</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-white border-4 border-black shadow-brutal p-6 brutal-card cursor-pointer">
+                    <div class="flex items-start gap-4">
+                        <span class="bg-pop-red text-white w-8 h-8 flex items-center justify-center border-2 border-black font-bold flex-shrink-0">Q</span>
+                        <div>
+                            <h3 class="font-bold mb-2">Không biết code có tham gia được không?</h3>
+                            <p class="text-gray-600">✅ Được! AI viết code, bạn chỉ cần describe design và review output.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-pop-yellow border-4 border-black shadow-brutal p-6 brutal-card cursor-pointer">
+                    <div class="flex items-start gap-4">
+                        <span class="bg-pop-red text-white w-8 h-8 flex items-center justify-center border-2 border-black font-bold flex-shrink-0">Q</span>
+                        <div>
+                            <h3 class="font-bold mb-2">AI tạo design generic thì sao?</h3>
+                            <p class="text-gray-700">Workshop dạy cách describe chi tiết + iterate để match style riêng của bạn.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border-4 border-black shadow-brutal p-6 brutal-card cursor-pointer">
+                    <div class="flex items-start gap-4">
+                        <span class="bg-pop-red text-white w-8 h-8 flex items-center justify-center border-2 border-black font-bold flex-shrink-0">Q</span>
+                        <div>
+                            <h3 class="font-bold mb-2">2 tiếng có đủ không?</h3>
+                            <p class="text-gray-600">✅ Đủ làm 2 use cases + deploy portfolio. Có recording xem lại.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-pop-cyan border-4 border-black shadow-brutal p-6 brutal-card cursor-pointer">
+                    <div class="flex items-start gap-4">
+                        <span class="bg-pop-red text-white w-8 h-8 flex items-center justify-center border-2 border-black font-bold flex-shrink-0">Q</span>
+                        <div>
+                            <h3 class="font-bold mb-2">Figma đã có prototype rồi, cần gì nữa?</h3>
+                            <p class="text-gray-700">Prototype ≠ Live website. Client muốn "website thật" — gửi link được, xem mobile được.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-16 px-4 sm:px-6 lg:px-8 bg-pop-green border-y-4 border-black">
+        <div class="max-w-md mx-auto">
+            <div class="bg-white border-4 border-black shadow-brutal-xl p-8 sm:p-10 text-center relative tilt-left-sm">
+                <!-- Hot badge -->
+                <div class="absolute -top-4 -right-4 bg-pop-red text-white px-4 py-2 border-4 border-black font-mega font-bold rotate-12 shadow-brutal">
+                    HOT 🔥
+                </div>
+                
+                <span class="inline-block bg-black text-pop-yellow px-4 py-2 font-mono text-sm font-bold mb-6">WORKSHOP PASS</span>
+                
+                <div class="mb-2">
+                    <span class="text-gray-400 line-through text-xl">399.000đ</span>
+                </div>
+                <div class="font-mega text-6xl sm:text-7xl font-black mb-2">
+                    <span class="bg-pop-yellow px-2">249K</span>
+                </div>
+                <p class="text-gray-500 font-mono text-sm mb-8">⚠️ CHỈ NHẬN 30 SLOTS</p>
+                
+                <div class="space-y-3 text-left mb-8">
+                    <div class="flex items-center gap-3">
+                        <div class="checkbox-brutal flex-shrink-0">✓</div>
+                        <span class="font-bold">Live session 2 tiếng thực hành</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="checkbox-brutal flex-shrink-0">✓</div>
+                        <span class="font-bold">Recording xem lại không giới hạn</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="checkbox-brutal flex-shrink-0">✓</div>
+                        <span class="font-bold">Prompt templates & resources</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="checkbox-brutal flex-shrink-0">✓</div>
+                        <span class="font-bold">Q&A trực tiếp với trainer</span>
+                    </div>
+                </div>
+                
+                <a href="#" class="bg-pop-red text-white font-mega font-bold text-xl px-8 py-4 border-4 border-black shadow-brutal-lg brutal-card cursor-pointer block uppercase mb-6">
+                    Đăng ký ngay →
+                </a>
+                
+                <div class="bg-pop-cyan border-4 border-black p-4 text-left flex items-start gap-3">
+                    <span class="text-2xl">🛡️</span>
+                    <p class="text-sm font-bold">Không hài lòng sau 30 phút đầu? Hoàn tiền 100%, không hỏi lý do.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-black text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 text-9xl font-mega font-black text-white/20 -rotate-12">AI</div>
+            <div class="absolute bottom-10 right-10 text-9xl font-mega font-black text-white/20 rotate-12">UX</div>
+        </div>
+        
+        <div class="max-w-3xl mx-auto text-center relative">
+            <span class="font-mono text-pop-yellow text-lg">10/12 — 19:30</span>
+            <h2 class="font-mega text-4xl sm:text-5xl lg:text-6xl font-black uppercase mt-4 mb-8">
+                Bạn sẽ có<br>
+                <span class="inline-block bg-pop-yellow text-black px-4 py-2 rotate-2 mt-2">Portfolio mới</span>
+            </h2>
+            <a href="#pricing" class="inline-block bg-pop-red text-white font-mega font-bold text-xl px-10 py-5 border-4 border-white shadow-[6px_6px_0px_0px_#FFDE59] brutal-card cursor-pointer uppercase">
+                Đăng ký Workshop — 249K →
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-6 px-4 bg-pop-yellow border-t-4 border-black">
+        <div class="max-w-6xl mx-auto text-center font-mono text-sm font-bold">
+            © 2025 AI Workshop by Tony. All rights reserved. ✌️
+        </div>
+    </footer>
+
+    <!-- Mobile Sticky CTA -->
+    <div class="fixed bottom-0 left-0 right-0 p-3 bg-pop-yellow border-t-4 border-black sm:hidden z-50">
+        <a href="#pricing" class="bg-pop-red text-white font-mega font-bold py-3 border-4 border-black shadow-brutal brutal-card cursor-pointer block text-center uppercase">
+            Đăng ký — 249K →
+        </a>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(index) {
+            document.querySelectorAll('.tab-brutal').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            document.querySelector(`[data-tab="${index}"]`).classList.add('active');
+            document.querySelector(`[data-content="${index}"]`).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
