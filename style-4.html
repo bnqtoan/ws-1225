@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop AI cho UX/UI | Figma → Live Demo trong 30 phút</title>
+    <meta name="description" content="Workshop thực chiến: Biến Figma design thành website chạy thật, explore nhiều options nhanh x10. 10/12/2025, 19:30, Online. 249K.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=VT323&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-pink': '#FF2A6D',
+                        'neon-cyan': '#05D9E8',
+                        'neon-purple': '#D300C5',
+                        'neon-blue': '#0B3D91',
+                        'synth-dark': '#0D0221',
+                        'synth-mid': '#1A0533',
+                        'grid-purple': '#6B1E9C',
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                        terminal: ['VT323', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * { font-family: 'Rajdhani', sans-serif; }
+        
+        body {
+            background: linear-gradient(180deg, #0D0221 0%, #1A0533 50%, #0D0221 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* CRT Scanlines */
+        .crt::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* Grid floor perspective */
+        .grid-floor {
+            position: absolute;
+            bottom: 0;
+            left: -50%;
+            right: -50%;
+            height: 50%;
+            background: 
+                linear-gradient(180deg, transparent 0%, rgba(107, 30, 156, 0.3) 100%),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 80px,
+                    rgba(5, 217, 232, 0.2) 80px,
+                    rgba(5, 217, 232, 0.2) 81px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(5, 217, 232, 0.2) 40px,
+                    rgba(5, 217, 232, 0.2) 41px
+                );
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: center top;
+        }
+        
+        /* Sun gradient */
+        .synth-sun {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(180deg, #FF2A6D 0%, #D300C5 30%, #7B2DFF 60%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(2px);
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+        }
+        
+        .synth-sun::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 8px,
+                #0D0221 8px,
+                #0D0221 16px
+            );
+        }
+        
+        /* Neon glow text */
+        .neon-text {
+            text-shadow: 
+                0 0 5px #FF2A6D,
+                0 0 10px #FF2A6D,
+                0 0 20px #FF2A6D,
+                0 0 40px #D300C5,
+                0 0 80px #D300C5;
+        }
+        
+        .neon-text-cyan {
+            text-shadow: 
+                0 0 5px #05D9E8,
+                0 0 10px #05D9E8,
+                0 0 20px #05D9E8,
+                0 0 40px #05D9E8;
+        }
+        
+        /* Neon box */
+        .neon-box {
+            box-shadow: 
+                0 0 5px #05D9E8,
+                0 0 10px #05D9E8,
+                inset 0 0 5px rgba(5, 217, 232, 0.3);
+            border: 2px solid #05D9E8;
+        }
+        
+        .neon-box-pink {
+            box-shadow: 
+                0 0 5px #FF2A6D,
+                0 0 10px #FF2A6D,
+                inset 0 0 5px rgba(255, 42, 109, 0.3);
+            border: 2px solid #FF2A6D;
+        }
+        
+        /* Glitch effect */
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch:hover {
+            animation: glitch 0.3s infinite;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        /* Chrome gradient text */
+        .chrome-text {
+            background: linear-gradient(180deg, #FFFFFF 0%, #A0A0A0 40%, #FFFFFF 50%, #808080 60%, #FFFFFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        
+        /* Gradient text */
+        .gradient-text-synth {
+            background: linear-gradient(90deg, #FF2A6D 0%, #D300C5 50%, #05D9E8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Pulsing animation */
+        .pulse-neon {
+            animation: pulseNeon 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseNeon {
+            0%, 100% { opacity: 1; filter: brightness(1); }
+            50% { opacity: 0.8; filter: brightness(1.2); }
+        }
+        
+        /* Card hover */
+        .synth-card {
+            background: rgba(13, 2, 33, 0.8);
+            border: 1px solid rgba(5, 217, 232, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .synth-card:hover {
+            border-color: #05D9E8;
+            box-shadow: 0 0 20px rgba(5, 217, 232, 0.3);
+            transform: translateY(-4px);
+        }
+        
+        /* VHS tracking lines */
+        .vhs-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: vhsScan 8s linear infinite;
+        }
+        
+        @keyframes vhsScan {
+            0% { top: -10%; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+        
+        /* Tab active */
+        .tab-synth.active {
+            background: linear-gradient(135deg, rgba(255, 42, 109, 0.3), rgba(211, 0, 197, 0.3));
+            border-color: #FF2A6D;
+            box-shadow: 0 0 10px rgba(255, 42, 109, 0.5);
+        }
+        
+        /* Flicker animation */
+        .flicker {
+            animation: flicker 4s linear infinite;
+        }
+        
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.5; }
+        }
+        
+        /* Stars background */
+        .stars {
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, white, transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 90px 40px, white, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(1px 1px at 160px 120px, white, transparent);
+            background-size: 200px 200px;
+            animation: twinkle 5s ease-in-out infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .glitch:hover, .pulse-neon, .flicker, .stars, .vhs-line { animation: none; }
+            .crt::before { display: none; }
+        }
+    </style>
+</head>
+<body class="text-white crt">
+    
+    <!-- VHS Scan Line -->
+    <div class="vhs-line"></div>
+    
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-synth-dark/80 backdrop-blur-md border-b border-neon-cyan/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="#" class="font-orbitron text-xl font-bold tracking-wider flex items-center gap-2">
+                    <span class="neon-text-cyan">AI</span>
+                    <span class="text-white/80">WORKSHOP</span>
+                </a>
+                <a href="#pricing" class="neon-box-pink bg-neon-pink/10 px-6 py-2 font-orbitron text-sm font-bold tracking-wider cursor-pointer hover:bg-neon-pink/20 transition-all glitch">
+                    ĐĂNG KÝ NGAY
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen relative flex items-center pt-20 pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <!-- Background elements -->
+        <div class="absolute inset-0 stars"></div>
+        <div class="grid-floor"></div>
+        <div class="synth-sun"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center">
+                <!-- Badge -->
+                <div class="inline-block neon-box bg-synth-dark/80 px-6 py-2 mb-8">
+                    <span class="font-terminal text-xl text-neon-cyan tracking-widest flicker">
+                        ▶ LIVE WORKSHOP • 10/12/2025 • 19:30
+                    </span>
+                </div>
+                
+                <!-- Headline -->
+                <h1 class="font-orbitron text-5xl sm:text-6xl lg:text-8xl font-black uppercase leading-tight mb-6">
+                    <span class="block chrome-text">FIGMA</span>
+                    <span class="block text-3xl sm:text-4xl lg:text-5xl text-white/60 my-2">→</span>
+                    <span class="block neon-text">LIVE DEMO</span>
+                    <span class="block gradient-text-synth text-3xl sm:text-4xl lg:text-5xl mt-4">TRONG 30 PHÚT</span>
+                </h1>
+                
+                <!-- Subheadline -->
+                <p class="font-rajdhani text-xl sm:text-2xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    Workshop thực chiến cho UX/UI Designer: Dùng AI để biến thiết kế thành website chạy thật, explore nhiều options nhanh <span class="neon-text-cyan font-bold">x10</span>
+                </p>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                    <a href="#pricing" class="group relative px-10 py-4 font-orbitron font-bold tracking-wider cursor-pointer overflow-hidden">
+                        <span class="absolute inset-0 bg-gradient-to-r from-neon-pink via-neon-purple to-neon-pink bg-[length:200%_100%] animate-[shimmer_2s_linear_infinite]"></span>
+                        <span class="absolute inset-[2px] bg-synth-dark"></span>
+                        <span class="relative flex items-center gap-3 text-neon-pink group-hover:text-white transition-colors">
+                            ĐĂNG KÝ — 249K
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </span>
+                    </a>
+                    <a href="#demo" class="neon-box bg-synth-dark/50 px-10 py-4 font-orbitron font-bold tracking-wider cursor-pointer hover:bg-neon-cyan/10 transition-all flex items-center gap-3 justify-center glitch">
+                        <svg class="w-5 h-5 text-neon-cyan" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        XEM DEMO
+                    </a>
+                </div>
+                
+                <!-- Event Info -->
+                <div class="flex flex-wrap justify-center gap-6 font-terminal text-lg">
+                    <span class="text-neon-cyan">📅 THỨ TƯ 10/12</span>
+                    <span class="text-neon-pink">📍 ZOOM ONLINE</span>
+                    <span class="text-neon-purple">⏱️ 2 TIẾNG</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Decorative corner elements -->
+        <div class="absolute top-24 left-8 hidden lg:block">
+            <div class="neon-box w-20 h-20 rotate-45 pulse-neon"></div>
+        </div>
+        <div class="absolute top-32 right-12 hidden lg:block">
+            <div class="neon-box-pink w-16 h-16 rotate-12 pulse-neon" style="animation-delay: 1s;"></div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-neon-purple/5 to-transparent"></div>
+        
+        <div class="max-w-6xl mx-auto relative">
+            <div class="text-center mb-16">
+                <span class="font-terminal text-xl text-neon-pink tracking-widest">[ VẤN ĐỀ ]</span>
+                <h2 class="font-orbitron text-3xl sm:text-4xl lg:text-5xl font-bold mt-4 chrome-text">
+                    BẠN ĐANG STUCK Ở ĐÂU?
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="synth-card rounded-lg p-6 cursor-pointer">
+                    <div class="font-orbitron text-5xl font-black text-neon-pink/30 mb-4">01</div>
+                    <h3 class="font-orbitron text-lg font-bold mb-3 neon-text-cyan">DEMO = STATIC</h3>
+                    <p class="text-white/60 font-rajdhani">Client hỏi "click vào nó chạy sao?" — prototype Figma không đủ real</p>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="synth-card rounded-lg p-6 cursor-pointer">
+                    <div class="font-orbitron text-5xl font-black text-neon-purple/30 mb-4">02</div>
+                    <h3 class="font-orbitron text-lg font-bold mb-3 neon-text-cyan">EXPLORE = TỐN TIME</h3>
+                    <p class="text-white/60 font-rajdhani">Mỗi option mất 2-3 ngày, deadline không cho phép thử nhiều</p>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="synth-card rounded-lg p-6 cursor-pointer">
+                    <div class="font-orbitron text-5xl font-black text-neon-cyan/30 mb-4">03</div>
+                    <h3 class="font-orbitron text-lg font-bold mb-3 neon-text-cyan">PORTFOLIO = MOCKUP</h3>
+                    <p class="text-white/60 font-rajdhani">Recruiter muốn thấy product thật, không chỉ hình đẹp trên Behance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="font-terminal text-xl text-neon-cyan tracking-widest">[ GIẢI PHÁP ]</span>
+                <h2 class="font-orbitron text-3xl sm:text-4xl lg:text-5xl font-bold mt-4">
+                    <span class="neon-text">AI</span> <span class="text-white/80">LÀM CODE</span>
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="synth-card rounded-lg p-8 text-center cursor-pointer border-neon-pink/30 hover:border-neon-pink">
+                    <div class="w-20 h-20 mx-auto mb-6 neon-box-pink rounded-full flex items-center justify-center">
+                        <span class="text-4xl">🎯</span>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg mb-3">FIGMA → LIVE</h3>
+                    <p class="text-white/60">Export → AI code → Deploy demo có thể click, scroll</p>
+                </div>
+                
+                <div class="synth-card rounded-lg p-8 text-center cursor-pointer">
+                    <div class="w-20 h-20 mx-auto mb-6 neon-box rounded-full flex items-center justify-center">
+                        <span class="text-4xl">⚡</span>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg mb-3">EXPLORE x10</h3>
+                    <p class="text-white/60">1 prompt = 1 option. 30 phút có 3-4 variations</p>
+                </div>
+                
+                <div class="synth-card rounded-lg p-8 text-center cursor-pointer border-neon-purple/30 hover:border-neon-purple">
+                    <div class="w-20 h-20 mx-auto mb-6 border-2 border-neon-purple rounded-full flex items-center justify-center" style="box-shadow: 0 0 10px rgba(211, 0, 197, 0.5);">
+                        <span class="text-4xl">🏆</span>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg mb-3">PORTFOLIO LIVE</h3>
+                    <p class="text-white/60">Mockup → Website thật. Có URL gửi recruiter</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-neon-purple/5 via-neon-pink/5 to-transparent"></div>
+        
+        <div class="max-w-5xl mx-auto relative">
+            <div class="text-center mb-12">
+                <span class="font-terminal text-xl text-neon-purple tracking-widest">[ DEMO ]</span>
+                <h2 class="font-orbitron text-3xl sm:text-4xl font-bold mt-4 chrome-text">
+                    XEM WORKFLOW TRƯỚC
+                </h2>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button onclick="switchTab(0)" class="tab-synth active font-orbitron text-sm px-6 py-3 border border-neon-cyan/30 bg-synth-dark/50 cursor-pointer transition-all" data-tab="0">
+                    FIGMA → DEMO
+                </button>
+                <button onclick="switchTab(1)" class="tab-synth font-orbitron text-sm px-6 py-3 border border-neon-cyan/30 bg-synth-dark/50 cursor-pointer transition-all hover:border-neon-cyan" data-tab="1">
+                    EXPLORE OPTIONS
+                </button>
+                <button onclick="switchTab(2)" class="tab-synth font-orbitron text-sm px-6 py-3 border border-neon-cyan/30 bg-synth-dark/50 cursor-pointer transition-all hover:border-neon-cyan" data-tab="2">
+                    OUTPUT
+                </button>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="synth-card rounded-lg p-8 sm:p-12">
+                <!-- Tab 1 -->
+                <div class="tab-content" data-content="0">
+                    <div class="flex flex-col lg:flex-row items-center justify-center gap-8 mb-10">
+                        <div class="neon-box bg-synth-dark p-6 text-center">
+                            <div class="text-4xl mb-2">📐</div>
+                            <span class="font-terminal text-neon-cyan">FIGMA</span>
+                        </div>
+                        <div class="font-orbitron text-3xl text-neon-pink animate-pulse">→</div>
+                        <div class="neon-box-pink bg-synth-dark p-6 text-center">
+                            <div class="text-4xl mb-2">🌐</div>
+                            <span class="font-terminal text-neon-pink">LIVE SITE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid sm:grid-cols-4 gap-4">
+                        <div class="border border-neon-cyan/30 bg-synth-dark/50 p-4 text-center">
+                            <span class="font-orbitron text-2xl font-bold text-neon-cyan">01</span>
+                            <p class="font-rajdhani text-sm mt-2 text-white/70">Screenshot Figma</p>
+                        </div>
+                        <div class="border border-neon-pink/30 bg-synth-dark/50 p-4 text-center">
+                            <span class="font-orbitron text-2xl font-bold text-neon-pink">02</span>
+                            <p class="font-rajdhani text-sm mt-2 text-white/70">Describe cho AI</p>
+                        </div>
+                        <div class="border border-neon-purple/30 bg-synth-dark/50 p-4 text-center">
+                            <span class="font-orbitron text-2xl font-bold text-neon-purple">03</span>
+                            <p class="font-rajdhani text-sm mt-2 text-white/70">Generate code</p>
+                        </div>
+                        <div class="border border-neon-cyan/30 bg-synth-dark/50 p-4 text-center">
+                            <span class="font-orbitron text-2xl font-bold text-neon-cyan">04</span>
+                            <p class="font-rajdhani text-sm mt-2 text-white/70">Deploy & Share</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2 -->
+                <div class="tab-content hidden" data-content="1">
+                    <p class="text-center text-white/70 mb-8 font-rajdhani text-lg">Brief: "Landing page app fitness" → 4 hướng trong 1 giờ:</p>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="aspect-video bg-gray-100 border-2 border-white/20 flex items-center justify-center font-bold text-gray-800">Minimalist</div>
+                        <div class="aspect-video bg-synth-dark border-2 border-neon-cyan/50 flex items-center justify-center font-bold">Dark Mode</div>
+                        <div class="aspect-video bg-gradient-to-br from-neon-pink to-neon-purple border-2 border-neon-pink/50 flex items-center justify-center font-bold">Gradient</div>
+                        <div class="aspect-video bg-gradient-to-br from-yellow-400 to-orange-500 border-2 border-yellow-400/50 flex items-center justify-center font-bold text-black">Playful</div>
+                    </div>
+                    <p class="text-center font-terminal text-xl text-neon-cyan">→ 4 LIVE DEMOS • 1 GIỜ THAY VÌ 1 TUẦN</p>
+                </div>
+                
+                <!-- Tab 3 -->
+                <div class="tab-content hidden" data-content="2">
+                    <div class="max-w-md mx-auto space-y-4">
+                        <div class="flex items-center gap-4 border border-neon-cyan/30 bg-synth-dark/50 p-4">
+                            <span class="text-neon-cyan text-xl">✓</span>
+                            <span class="font-rajdhani">1 Portfolio website live</span>
+                        </div>
+                        <div class="flex items-center gap-4 border border-neon-pink/30 bg-synth-dark/50 p-4">
+                            <span class="text-neon-pink text-xl">✓</span>
+                            <span class="font-rajdhani">3 Landing page variations</span>
+                        </div>
+                        <div class="flex items-center gap-4 border border-neon-purple/30 bg-synth-dark/50 p-4">
+                            <span class="text-neon-purple text-xl">✓</span>
+                            <span class="font-rajdhani">Workflow Figma → AI → Deploy</span>
+                        </div>
+                        <div class="flex items-center gap-4 border border-neon-cyan/30 bg-synth-dark/50 p-4">
+                            <span class="text-neon-cyan text-xl">✓</span>
+                            <span class="font-rajdhani">Prompt templates</span>
+                        </div>
+                        <div class="flex items-center gap-4 border border-neon-pink/30 bg-synth-dark/50 p-4">
+                            <span class="text-neon-pink text-xl">✓</span>
+                            <span class="font-rajdhani">Recording xem lại</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agenda Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="font-terminal text-xl text-neon-pink tracking-widest">[ AGENDA ]</span>
+                <h2 class="font-orbitron text-3xl sm:text-4xl font-bold mt-4">
+                    <span class="chrome-text">2 GIỜ</span> <span class="neon-text">THỰC HÀNH</span>
+                </h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="flex gap-4 items-center synth-card p-4 cursor-pointer">
+                    <div class="neon-box w-16 h-16 flex items-center justify-center flex-shrink-0">
+                        <span class="font-orbitron font-bold text-neon-cyan">15'</span>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron font-bold">SETUP & MINDSET</h3>
+                        <p class="text-white/60 text-sm">Cách describe design cho AI hiểu đúng ý</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-center synth-card p-4 cursor-pointer">
+                    <div class="neon-box-pink w-16 h-16 flex items-center justify-center flex-shrink-0">
+                        <span class="font-orbitron font-bold text-neon-pink">30'</span>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron font-bold">USE CASE 1: FIGMA → LIVE</h3>
+                        <p class="text-white/60 text-sm">Chuyển design thành website chạy thật</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-center synth-card p-4 cursor-pointer">
+                    <div class="border-2 border-neon-purple w-16 h-16 flex items-center justify-center flex-shrink-0" style="box-shadow: 0 0 10px rgba(211, 0, 197, 0.5);">
+                        <span class="font-orbitron font-bold text-neon-purple">30'</span>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron font-bold">USE CASE 2: EXPLORE OPTIONS</h3>
+                        <p class="text-white/60 text-sm">Tạo 3 variations từ 1 concept gốc</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-center synth-card p-4 cursor-pointer">
+                    <div class="neon-box w-16 h-16 flex items-center justify-center flex-shrink-0">
+                        <span class="font-orbitron font-bold text-neon-cyan">30'</span>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron font-bold">BUILD PORTFOLIO</h3>
+                        <p class="text-white/60 text-sm">Gom demos + deploy GitHub Pages</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 items-center synth-card p-4 cursor-pointer">
+                    <div class="neon-box-pink w-16 h-16 flex items-center justify-center flex-shrink-0">
+                        <span class="font-orbitron font-bold text-neon-pink">15'</span>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron font-bold">Q&A + TIPS</h3>
+                        <p class="text-white/60 text-sm">Workflow tối ưu, free tier hiệu quả</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trainer Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-neon-pink/5 to-transparent"></div>
+        
+        <div class="max-w-4xl mx-auto relative">
+            <div class="synth-card rounded-lg p-8 sm:p-12">
+                <div class="text-center mb-8">
+                    <span class="font-terminal text-xl text-neon-cyan tracking-widest">[ TRAINER ]</span>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <!-- Avatar -->
+                    <div class="relative">
+                        <div class="w-32 h-32 neon-box-pink rounded-full flex items-center justify-center bg-synth-dark">
+                            <span class="font-orbitron text-5xl font-black neon-text">T</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Info -->
+                    <div class="flex-1 text-center md:text-left">
+                        <h3 class="font-orbitron text-3xl font-bold chrome-text">TONY</h3>
+                        <p class="text-white/60 mb-4">AI Educator & Entrepreneur</p>
+                        
+                        <!-- Stats -->
+                        <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-4">
+                            <span class="neon-box bg-synth-dark px-3 py-1 font-terminal text-sm">15+ NĂM DEV</span>
+                            <span class="neon-box-pink bg-synth-dark px-3 py-1 font-terminal text-sm">10+ NĂM AUTO</span>
+                            <span class="border border-neon-purple bg-synth-dark px-3 py-1 font-terminal text-sm" style="box-shadow: 0 0 10px rgba(211, 0, 197, 0.3);">250+ HỌC VIÊN</span>
+                        </div>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                            <span class="bg-white/10 px-2 py-1 text-xs font-terminal">CTO @ GOHA</span>
+                            <span class="bg-white/10 px-2 py-1 text-xs font-terminal">FOUNDER @ VÂN TAY MEDIA</span>
+                            <span class="bg-white/10 px-2 py-1 text-xs font-terminal">MSE AI @ FPT</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quote -->
+                <blockquote class="mt-8 text-center text-lg text-white/70 border-l-2 border-neon-pink pl-4">
+                    "Tôi đã tiết kiệm <span class="neon-text-cyan">50%+ thời gian</span> ở 2 agency bằng AI automation. Workshop này là workflow tôi dùng <span class="neon-text">hàng ngày</span>."
+                </blockquote>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="font-terminal text-xl text-neon-purple tracking-widest">[ FAQ ]</span>
+                <h2 class="font-orbitron text-3xl sm:text-4xl font-bold mt-4 chrome-text">HỎI ĐÁP NHANH</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="synth-card rounded-lg p-6 cursor-pointer">
+                    <div class="flex items-start gap-4">
+                        <span class="neon-box-pink w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold text-sm">Q</span>
+                        <div>
+                            <h3 class="font-orbitron font-bold mb-2">KHÔNG BIẾT CODE CÓ HỌC ĐƯỢC KHÔNG?</h3>
+                            <p class="text-white/60 font-rajdhani">✅ Được! AI viết code, bạn chỉ describe design và review output.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="synth-card rounded-lg p-6 cursor-pointer">
+                    <div class="flex items-start gap-4">
+                        <span class="neon-box-pink w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold text-sm">Q</span>
+                        <div>
+                            <h3 class="font-orbitron font-bold mb-2">AI TẠO DESIGN GENERIC?</h3>
+                            <p class="text-white/60 font-rajdhani">Workshop dạy describe chi tiết + iterate để match style riêng.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="synth-card rounded-lg p-6 cursor-pointer">
+                    <div class="flex items-start gap-4">
+                        <span class="neon-box-pink w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold text-sm">Q</span>
+                        <div>
+                            <h3 class="font-orbitron font-bold mb-2">2 TIẾNG CÓ ĐỦ KHÔNG?</h3>
+                            <p class="text-white/60 font-rajdhani">✅ Đủ làm 2 use cases + deploy portfolio. Có recording xem lại.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="synth-card rounded-lg p-6 cursor-pointer">
+                    <div class="flex items-start gap-4">
+                        <span class="neon-box-pink w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold text-sm">Q</span>
+                        <div>
+                            <h3 class="font-orbitron font-bold mb-2">FIGMA ĐÃ CÓ PROTOTYPE RỒI?</h3>
+                            <p class="text-white/60 font-rajdhani">Prototype ≠ Live website. Client muốn website thật — gửi link được.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-neon-purple/10 via-neon-pink/10 to-transparent"></div>
+        
+        <div class="max-w-md mx-auto relative">
+            <div class="relative">
+                <!-- Glow effect -->
+                <div class="absolute -inset-1 bg-gradient-to-r from-neon-pink via-neon-purple to-neon-cyan rounded-lg blur-lg opacity-50 animate-pulse"></div>
+                
+                <div class="relative synth-card rounded-lg p-8 sm:p-10 text-center border-2 border-neon-pink">
+                    <span class="inline-block neon-box-pink bg-synth-dark px-4 py-2 font-orbitron text-sm font-bold mb-6">
+                        WORKSHOP PASS
+                    </span>
+                    
+                    <div class="mb-2">
+                        <span class="text-white/40 line-through font-terminal text-xl">399.000đ</span>
+                    </div>
+                    <div class="font-orbitron text-6xl sm:text-7xl font-black neon-text mb-2">249K</div>
+                    <p class="text-white/50 font-terminal mb-8">⚠️ CHỈ NHẬN 30 SLOTS</p>
+                    
+                    <div class="space-y-3 text-left mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="text-neon-cyan">✓</span>
+                            <span class="font-rajdhani">Live session 2 tiếng thực hành</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-neon-pink">✓</span>
+                            <span class="font-rajdhani">Recording xem lại không giới hạn</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-neon-purple">✓</span>
+                            <span class="font-rajdhani">Prompt templates & resources</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-neon-cyan">✓</span>
+                            <span class="font-rajdhani">Q&A trực tiếp với trainer</span>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="block w-full py-4 font-orbitron font-bold text-lg cursor-pointer relative overflow-hidden group">
+                        <span class="absolute inset-0 bg-gradient-to-r from-neon-pink via-neon-purple to-neon-pink bg-[length:200%_100%] animate-[shimmer_2s_linear_infinite]"></span>
+                        <span class="relative">ĐĂNG KÝ NGAY →</span>
+                    </a>
+                    
+                    <div class="mt-6 neon-box bg-synth-dark/50 p-4 text-left flex items-start gap-3">
+                        <span class="text-xl">🛡️</span>
+                        <p class="text-sm text-white/70 font-rajdhani">Không hài lòng sau 30 phút đầu? Hoàn tiền 100%.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="grid-floor" style="height: 60%;"></div>
+        
+        <div class="max-w-3xl mx-auto text-center relative z-10">
+            <span class="font-terminal text-xl text-neon-cyan flicker">10/12 — 19:30</span>
+            <h2 class="font-orbitron text-4xl sm:text-5xl lg:text-6xl font-black mt-4 mb-10">
+                <span class="chrome-text">BẠN SẼ CÓ</span><br>
+                <span class="neon-text">PORTFOLIO MỚI</span>
+            </h2>
+            <a href="#pricing" class="inline-block relative px-12 py-5 font-orbitron font-bold text-xl cursor-pointer group glitch">
+                <span class="absolute inset-0 bg-gradient-to-r from-neon-pink via-neon-purple to-neon-cyan"></span>
+                <span class="absolute inset-[2px] bg-synth-dark"></span>
+                <span class="relative gradient-text-synth group-hover:text-white transition-colors">
+                    ĐĂNG KÝ WORKSHOP — 249K →
+                </span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-4 border-t border-neon-cyan/20">
+        <div class="max-w-6xl mx-auto text-center font-terminal text-white/50">
+            © 2025 AI WORKSHOP BY TONY // ALL RIGHTS RESERVED
+        </div>
+    </footer>
+
+    <!-- Mobile Sticky CTA -->
+    <div class="fixed bottom-0 left-0 right-0 p-3 bg-synth-dark/95 backdrop-blur-md border-t border-neon-pink/30 sm:hidden z-50">
+        <a href="#pricing" class="block w-full py-3 font-orbitron font-bold cursor-pointer text-center relative overflow-hidden">
+            <span class="absolute inset-0 bg-gradient-to-r from-neon-pink to-neon-purple"></span>
+            <span class="relative">ĐĂNG KÝ — 249K →</span>
+        </a>
+    </div>
+
+    <script>
+        function switchTab(index) {
+            document.querySelectorAll('.tab-synth').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+            document.querySelector(`[data-tab="${index}"]`).classList.add('active');
+            document.querySelector(`[data-content="${index}"]`).classList.remove('hidden');
+        }
+    </script>
+    
+    <style>
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</body>
+</html>
