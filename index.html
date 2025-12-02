@@ -7,6 +7,7 @@
     <meta name="description" content="Workshop thực chiến: Biến Figma design thành website chạy thật, explore nhiều options nhanh x10. 10/12/2025, 19:30, Online. 249K.">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -321,6 +322,26 @@
         .dark .typing-highlight {
             color: #FF6B9D;
         }
+        
+        /* Three.js canvas */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.7;
+        }
+        
+        .dark #hero-canvas {
+            opacity: 0.9;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="antialiased bg-white dark:bg-[#0D0D0D] text-dark dark:text-light transition-colors duration-300">
@@ -358,20 +379,28 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="pt-28 pb-16 sm:pt-36 sm:pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section class="pt-28 pb-16 sm:pt-36 sm:pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden min-h-screen">
+        <!-- Three.js Canvas -->
+        <canvas id="hero-canvas"></canvas>
+        
         <!-- Decorative circles -->
         <div class="deco-circle w-96 h-96 bg-brand-pink -top-48 -right-48 absolute"></div>
         <div class="deco-circle w-64 h-64 bg-brand-yellow bottom-0 -left-32 absolute"></div>
         
-        <div class="max-w-6xl mx-auto relative">
+        <div class="max-w-6xl mx-auto relative hero-content">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <!-- Left Content -->
                 <div class="fade-up">
                     <!-- Badge -->
-                    <div class="inline-flex items-center gap-2 badge-pink px-4 py-2 text-sm mb-6">
+                    <div class="inline-flex items-center gap-2 badge-pink px-4 py-2 text-sm mb-4">
                         <span class="w-2 h-2 bg-brand-pink rounded-full animate-pulse"></span>
                         Live Workshop • 10/12/2025
                     </div>
+                    
+                    <!-- Series description -->
+                    <p class="text-sm text-gray-mid dark:text-gray-400 mb-4">
+                        Một workshop trong chuỗi sự kiện <span class="text-brand-pink font-semibold">Nghề trong người</span> của <span class="font-semibold text-dark dark:text-white">TELOS ACADEMY</span>
+                    </p>
                     
                     <!-- Headline with typing effect -->
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
@@ -415,7 +444,7 @@
                             <svg class="w-5 h-5 text-brand-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                             </svg>
-                            <span>Online qua Zoom</span>
+                            <span>Online qua Google Meet</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <svg class="w-5 h-5 text-brand-indigo dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -791,6 +820,7 @@
                         <div class="flex flex-wrap gap-2 justify-center md:justify-start">
                             <span class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium">CTO @ GOHA</span>
                             <span class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium">Founder @ Vân Tay Media</span>
+                            <span class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium">Founder @ Vibery Product Studio</span>
                             <span class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium">MSE AI @ FPT</span>
                         </div>
                     </div>
@@ -879,8 +909,7 @@
                     <div class="mb-2">
                         <span class="text-gray-mid dark:text-gray-400 line-through text-lg">399.000đ</span>
                     </div>
-                    <div class="text-6xl sm:text-7xl font-extrabold text-gradient-pink mb-2">249K</div>
-                    <p class="text-gray-mid dark:text-gray-400 text-sm mb-8">Chỉ nhận 30 slots</p>
+                    <div class="text-6xl sm:text-7xl font-extrabold text-gradient-pink mb-8">249K</div>
                     
                     <div class="space-y-3 text-left mb-8">
                         <div class="flex items-center gap-3">
@@ -917,16 +946,9 @@
                         </div>
                     </div>
                     
-                    <a href="#" class="btn-pink w-full py-4 text-lg cursor-pointer block mb-6">
+                    <a href="#" class="btn-pink w-full py-4 text-lg cursor-pointer block">
                         Đăng ký ngay
                     </a>
-                    
-                    <div class="bg-light dark:bg-dark rounded-xl p-4 flex items-start gap-3 text-left">
-                        <svg class="w-5 h-5 text-brand-yellow flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                        <p class="text-sm text-gray-mid dark:text-gray-400">Không hài lòng sau 30 phút đầu? Hoàn tiền 100%, không hỏi lý do.</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1106,6 +1128,277 @@
         }, { threshold: 0.1 });
 
         document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        
+        // Three.js Animation - Floating Design Elements
+        let threeScene, threeCamera, threeRenderer;
+        let floatingShapes = [];
+        let connectionLines = [];
+        let particles = [];
+        let threeAnimationId = null;
+        let isThreeVisible = true;
+        
+        function initThreeJS() {
+            const canvas = document.getElementById('hero-canvas');
+            if (!canvas) return;
+            
+            const container = canvas.parentElement;
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            
+            // Scene
+            threeScene = new THREE.Scene();
+            
+            // Camera
+            threeCamera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+            threeCamera.position.z = 30;
+            
+            // Renderer
+            threeRenderer = new THREE.WebGLRenderer({ 
+                canvas: canvas,
+                alpha: true,
+                antialias: true
+            });
+            threeRenderer.setSize(width, height);
+            threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            
+            // Colors
+            const isDark = document.documentElement.classList.contains('dark');
+            const colors = {
+                pink: 0xEF4A81,
+                yellow: 0xFFC845,
+                indigo: 0x5D4FB8,
+                white: isDark ? 0xFFFFFF : 0x171717
+            };
+            
+            // Create floating shapes - representing design elements
+            const shapeGeometries = [
+                new THREE.BoxGeometry(2, 2, 2),           // Box - representing layout blocks
+                new THREE.SphereGeometry(1.2, 32, 32),    // Sphere - representing buttons
+                new THREE.TorusGeometry(1, 0.4, 16, 32),  // Torus - representing inputs
+                new THREE.OctahedronGeometry(1.5),        // Octahedron - representing icons
+                new THREE.ConeGeometry(1, 2, 4),          // Pyramid - representing hierarchy
+                new THREE.IcosahedronGeometry(1.3),       // Icosahedron - representing components
+            ];
+            
+            const shapeColors = [colors.pink, colors.yellow, colors.indigo, colors.pink, colors.yellow, colors.indigo];
+            
+            for (let i = 0; i < 12; i++) {
+                const geoIndex = i % shapeGeometries.length;
+                const geometry = shapeGeometries[geoIndex];
+                
+                const material = new THREE.MeshBasicMaterial({
+                    color: shapeColors[geoIndex],
+                    wireframe: true,
+                    transparent: true,
+                    opacity: isDark ? 0.6 : 0.4
+                });
+                
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                // Random position in a spread area
+                mesh.position.x = (Math.random() - 0.5) * 50;
+                mesh.position.y = (Math.random() - 0.5) * 30;
+                mesh.position.z = (Math.random() - 0.5) * 20;
+                
+                // Random rotation
+                mesh.rotation.x = Math.random() * Math.PI;
+                mesh.rotation.y = Math.random() * Math.PI;
+                
+                // Store animation properties
+                mesh.userData = {
+                    rotationSpeed: {
+                        x: (Math.random() - 0.5) * 0.01,
+                        y: (Math.random() - 0.5) * 0.01,
+                        z: (Math.random() - 0.5) * 0.01
+                    },
+                    floatSpeed: 0.5 + Math.random() * 0.5,
+                    floatOffset: Math.random() * Math.PI * 2,
+                    originalY: mesh.position.y
+                };
+                
+                threeScene.add(mesh);
+                floatingShapes.push(mesh);
+            }
+            
+            // Create connection lines between nearby shapes
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: isDark ? 0xFFFFFF : 0x171717,
+                transparent: true,
+                opacity: 0.1
+            });
+            
+            for (let i = 0; i < floatingShapes.length; i++) {
+                for (let j = i + 1; j < floatingShapes.length; j++) {
+                    const distance = floatingShapes[i].position.distanceTo(floatingShapes[j].position);
+                    if (distance < 20) {
+                        const geometry = new THREE.BufferGeometry().setFromPoints([
+                            floatingShapes[i].position,
+                            floatingShapes[j].position
+                        ]);
+                        const line = new THREE.Line(geometry, lineMaterial);
+                        line.userData = { startIndex: i, endIndex: j };
+                        threeScene.add(line);
+                        connectionLines.push(line);
+                    }
+                }
+            }
+            
+            // Create particles flowing between shapes
+            const particleGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+            
+            for (let i = 0; i < 30; i++) {
+                const particleMaterial = new THREE.MeshBasicMaterial({
+                    color: [colors.pink, colors.yellow, colors.indigo][i % 3],
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+                particle.position.set(
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 25,
+                    (Math.random() - 0.5) * 15
+                );
+                
+                particle.userData = {
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.1,
+                        (Math.random() - 0.5) * 0.1,
+                        (Math.random() - 0.5) * 0.05
+                    ),
+                    originalPos: particle.position.clone()
+                };
+                
+                threeScene.add(particle);
+                particles.push(particle);
+            }
+            
+            // Handle resize
+            window.addEventListener('resize', onThreeResize);
+            
+            // Start animation
+            animateThree();
+        }
+        
+        function onThreeResize() {
+            const canvas = document.getElementById('hero-canvas');
+            if (!canvas || !threeCamera || !threeRenderer) return;
+            
+            const container = canvas.parentElement;
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            
+            threeCamera.aspect = width / height;
+            threeCamera.updateProjectionMatrix();
+            threeRenderer.setSize(width, height);
+        }
+        
+        function animateThree() {
+            if (!isThreeVisible) {
+                threeAnimationId = null;
+                return;
+            }
+            
+            threeAnimationId = requestAnimationFrame(animateThree);
+            
+            const time = Date.now() * 0.001;
+            
+            // Animate floating shapes
+            floatingShapes.forEach((shape, i) => {
+                shape.rotation.x += shape.userData.rotationSpeed.x;
+                shape.rotation.y += shape.userData.rotationSpeed.y;
+                shape.rotation.z += shape.userData.rotationSpeed.z;
+                
+                // Gentle floating motion
+                shape.position.y = shape.userData.originalY + 
+                    Math.sin(time * shape.userData.floatSpeed + shape.userData.floatOffset) * 1.5;
+            });
+            
+            // Update connection lines
+            connectionLines.forEach(line => {
+                const positions = line.geometry.attributes.position;
+                const startShape = floatingShapes[line.userData.startIndex];
+                const endShape = floatingShapes[line.userData.endIndex];
+                
+                positions.setXYZ(0, startShape.position.x, startShape.position.y, startShape.position.z);
+                positions.setXYZ(1, endShape.position.x, endShape.position.y, endShape.position.z);
+                positions.needsUpdate = true;
+            });
+            
+            // Animate particles
+            particles.forEach(particle => {
+                particle.position.add(particle.userData.velocity);
+                
+                // Boundary check - wrap around
+                if (Math.abs(particle.position.x) > 25) particle.userData.velocity.x *= -1;
+                if (Math.abs(particle.position.y) > 15) particle.userData.velocity.y *= -1;
+                if (Math.abs(particle.position.z) > 10) particle.userData.velocity.z *= -1;
+                
+                // Pulse scale
+                const scale = 1 + Math.sin(time * 3 + particle.id) * 0.3;
+                particle.scale.setScalar(scale);
+            });
+            
+            // Gentle camera movement
+            threeCamera.position.x = Math.sin(time * 0.1) * 2;
+            threeCamera.position.y = Math.cos(time * 0.15) * 1;
+            threeCamera.lookAt(0, 0, 0);
+            
+            threeRenderer.render(threeScene, threeCamera);
+        }
+        
+        // Observe hero section for Three.js performance
+        function setupThreeObserver() {
+            const heroSection = document.getElementById('hero-canvas');
+            if (!heroSection) return;
+            
+            const heroObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (!isThreeVisible) {
+                            isThreeVisible = true;
+                            if (!threeAnimationId) animateThree();
+                        }
+                    } else {
+                        isThreeVisible = false;
+                        if (threeAnimationId) {
+                            cancelAnimationFrame(threeAnimationId);
+                            threeAnimationId = null;
+                        }
+                    }
+                });
+            }, { threshold: 0.05 });
+            
+            heroObserver.observe(heroSection.parentElement);
+        }
+        
+        // Update Three.js colors on dark mode toggle
+        function updateThreeColors() {
+            if (!threeScene) return;
+            
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            floatingShapes.forEach(shape => {
+                shape.material.opacity = isDark ? 0.6 : 0.4;
+            });
+            
+            connectionLines.forEach(line => {
+                line.material.color.setHex(isDark ? 0xFFFFFF : 0x171717);
+            });
+        }
+        
+        // Modify toggleDarkMode to update Three.js
+        const originalToggleDarkMode = toggleDarkMode;
+        toggleDarkMode = function() {
+            originalToggleDarkMode();
+            setTimeout(updateThreeColors, 50);
+        };
+        
+        // Initialize Three.js on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initThreeJS();
+            setupThreeObserver();
+        });
     </script>
 </body>
 </html>
