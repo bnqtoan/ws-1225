@@ -1706,6 +1706,12 @@
       async function updatePrice() {
         const quantity = parseInt(document.getElementById("quantity").value);
         const email = document.getElementById("customer_email").value;
+        const totalPriceEl = document.getElementById("total-price");
+
+        // Show loading state
+        const originalPrice = totalPriceEl.innerHTML;
+        totalPriceEl.innerHTML = '<span class="animate-pulse">Đang tính...</span>';
+        totalPriceEl.classList.add('opacity-50');
 
         try {
           const response = await fetch(
@@ -1729,17 +1735,35 @@
           const data = await response.json();
 
           if (response.ok && data.success) {
+            const oldTotal = currentTotal;
             currentTotal = data.data.total;
-            document.getElementById("total-price").innerHTML =
-              data.data.total_formatted;
+
+            totalPriceEl.classList.remove('opacity-50');
+            totalPriceEl.innerHTML = data.data.total_formatted;
+
+            // Check if discount was applied
+            if (oldTotal > 0 && currentTotal < oldTotal) {
+              // Show confetti for discount!
+              triggerConfetti();
+              totalPriceEl.classList.add('scale-110', 'text-green-600');
+              setTimeout(() => {
+                totalPriceEl.classList.remove('scale-110', 'text-green-600');
+              }, 500);
+            }
+
             window.dispatchEvent(
               new CustomEvent("vt:price:updated", {
                 detail: { quantity, total: currentTotal },
               })
             );
+          } else {
+            totalPriceEl.classList.remove('opacity-50');
+            totalPriceEl.innerHTML = originalPrice;
           }
         } catch (error) {
           console.error("Failed to update price:", error);
+          totalPriceEl.classList.remove('opacity-50');
+          totalPriceEl.innerHTML = originalPrice;
         }
       }
 
@@ -1749,6 +1773,11 @@
           showCheckoutError("Vui lòng nhập mã coupon");
           return;
         }
+
+        const couponBtn = event.target;
+        const originalText = couponBtn.textContent;
+        couponBtn.textContent = "Đang kiểm tra...";
+        couponBtn.disabled = true;
 
         try {
           const response = await fetch(
@@ -1777,6 +1806,10 @@
               .classList.remove("hidden");
             document.getElementById("coupon_code").value = "";
             showCheckoutSuccess("Áp dụng mã giảm giá thành công!");
+
+            // Trigger confetti for coupon
+            triggerConfetti();
+
             updatePrice();
 
             window.dispatchEvent(
@@ -1789,6 +1822,9 @@
           }
         } catch (error) {
           showCheckoutError("Lỗi kết nối: " + error.message);
+        } finally {
+          couponBtn.textContent = originalText;
+          couponBtn.disabled = false;
         }
       }
 
@@ -2053,6 +2089,61 @@
         if (timeoutNotice) {
           timeoutNotice.classList.remove('hidden');
         }
+      }
+
+      // Confetti effect for discounts
+      function triggerConfetti() {
+        const duration = 2000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+        function randomInRange(min, max) {
+          return Math.random() * (max - min) + min;
+        }
+
+        const interval = setInterval(function() {
+          const timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval);
+          }
+
+          const particleCount = 50 * (timeLeft / duration);
+
+          // Create confetti particles
+          for (let i = 0; i < particleCount; i++) {
+            createConfettiParticle(
+              randomInRange(0.1, 0.3),
+              randomInRange(0.1, 0.9)
+            );
+          }
+        }, 250);
+      }
+
+      function createConfettiParticle(x, y) {
+        const colors = ['#ec4899', '#f59e0b', '#3b82f6', '#10b981', '#8b5cf6'];
+        const particle = document.createElement('div');
+        particle.style.position = 'fixed';
+        particle.style.left = (x * window.innerWidth) + 'px';
+        particle.style.top = (y * window.innerHeight) + 'px';
+        particle.style.width = '10px';
+        particle.style.height = '10px';
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.borderRadius = '50%';
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '9999';
+        particle.style.transition = 'all 2s ease-out';
+
+        document.body.appendChild(particle);
+
+        setTimeout(() => {
+          particle.style.top = (window.innerHeight + 100) + 'px';
+          particle.style.opacity = '0';
+        }, 10);
+
+        setTimeout(() => {
+          document.body.removeChild(particle);
+        }, 2000);
       }
     </script>
 
