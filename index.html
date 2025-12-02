@@ -1080,7 +1080,7 @@
             try {
                 const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/calculate-price`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-VT-API-Key': CHECKOUT_CONFIG.API_KEY },
                     body: JSON.stringify({
                         product_id: CHECKOUT_CONFIG.PRODUCT_ID,
                         variation_id: CHECKOUT_CONFIG.VARIATION_ID,
@@ -1118,7 +1118,7 @@
             try {
                 const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/calculate-totals`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-VT-API-Key': CHECKOUT_CONFIG.API_KEY },
                     body: JSON.stringify({
                         product_id: CHECKOUT_CONFIG.PRODUCT_ID,
                         variation_id: CHECKOUT_CONFIG.VARIATION_ID,
@@ -1152,7 +1152,7 @@
             try {
                 const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/validate-coupon`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-VT-API-Key': CHECKOUT_CONFIG.API_KEY  },
                     body: JSON.stringify({
                         coupon_code: couponCode,
                         product_id: CHECKOUT_CONFIG.PRODUCT_ID,
@@ -1205,7 +1205,7 @@
             try {
                 const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/checkout`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-VT-API-Key': CHECKOUT_CONFIG.API_KEY  },
                     body: JSON.stringify(formData)
                 });
                 
