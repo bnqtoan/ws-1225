@@ -1,1755 +1,2558 @@
 <!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Workshop AI cho UX/UI | Figma → Live Demo trong 30 phút</title>
-    <meta name="description" content="Workshop thực chiến: Biến Figma design thành website chạy thật, explore nhiều options nhanh x10. 10/12/2025, 19:30, Online. 249K.">
-    
+    <meta
+      name="description"
+      content="Workshop thực chiến: Biến Figma design thành website chạy thật, explore nhiều options nhanh x10. 10/12/2025, 19:30, Online. 249K."
+    />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Dark mode script - runs before render to prevent flash -->
     <script>
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     </script>
-    
+
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        'brand-pink': '#EF4A81',
-                        'brand-yellow': '#FFC845',
-                        'brand-indigo': '#241775',
-                        'dark': '#171717',
-                        'dark-alt': '#262626',
-                        'dark-card': '#1E1E1E',
-                        'light': '#F5F5F5',
-                        'gray-mid': '#737373',
-                        'gray-border': '#D4D4D4',
-                    },
-                    fontFamily: {
-                        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                }
-            }
-        }
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "brand-pink": "#EF4A81",
+              "brand-yellow": "#FFC845",
+              "brand-indigo": "#241775",
+              dark: "#171717",
+              "dark-alt": "#262626",
+              "dark-card": "#1E1E1E",
+              light: "#F5F5F5",
+              "gray-mid": "#737373",
+              "gray-border": "#D4D4D4",
+            },
+            fontFamily: {
+              jakarta: ['"Plus Jakarta Sans"', "sans-serif"],
+            },
+          },
+        },
+      };
     </script>
-    
+
     <style>
-        * {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        
-        body {
-            background: #FFFFFF;
-            color: #171717;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        .dark body,
-        html.dark body {
-            background: #0D0D0D;
-            color: #F5F5F5;
-        }
-        
-        /* Gradient backgrounds */
-        .bg-gradient-pink {
-            background: linear-gradient(135deg, #EF4A81 0%, #FF6B9D 100%);
-        }
-        
-        .bg-gradient-yellow {
-            background: linear-gradient(135deg, #FFC845 0%, #FFD970 100%);
-        }
-        
-        .bg-gradient-indigo {
-            background: linear-gradient(135deg, #241775 0%, #3D2A9B 100%);
-        }
-        
-        /* Text gradients */
-        .text-gradient-pink {
-            background: linear-gradient(135deg, #EF4A81, #FF6B9D);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        /* Card styles */
-        .telos-card {
-            background: #FFFFFF;
-            border: 1px solid #D4D4D4;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .dark .telos-card {
-            background: #1E1E1E;
-            border-color: #333333;
-        }
-        
-        .telos-card:hover {
-            border-color: #EF4A81;
-            box-shadow: 0 10px 40px rgba(239, 74, 129, 0.15);
-            transform: translateY(-4px);
-        }
-        
-        .dark .telos-card:hover {
-            box-shadow: 0 10px 40px rgba(239, 74, 129, 0.25);
-        }
-        
-        .telos-card-dark {
-            background: #171717;
-            border: 1px solid #262626;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .telos-card-dark:hover {
-            border-color: #EF4A81;
-            box-shadow: 0 10px 40px rgba(239, 74, 129, 0.2);
-        }
-        
-        /* Button styles */
-        .btn-pink {
-            background: #EF4A81;
-            color: white;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-pink:hover {
-            background: #D93D6F;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(239, 74, 129, 0.35);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #171717;
-            color: #171717;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        
-        .dark .btn-outline {
-            border-color: #F5F5F5;
-            color: #F5F5F5;
-        }
-        
-        .btn-outline:hover {
-            background: #171717;
-            color: white;
-        }
-        
-        .dark .btn-outline:hover {
-            background: #F5F5F5;
-            color: #171717;
-        }
-        
-        /* Badge styles */
-        .badge-pink {
-            background: rgba(239, 74, 129, 0.1);
-            color: #EF4A81;
-            border-radius: 100px;
-            font-weight: 600;
-        }
-        
-        .dark .badge-pink {
-            background: rgba(239, 74, 129, 0.2);
-        }
-        
-        .badge-yellow {
-            background: rgba(255, 200, 69, 0.2);
-            color: #B38600;
-            border-radius: 100px;
-            font-weight: 600;
-        }
-        
-        .dark .badge-yellow {
-            color: #FFC845;
-            background: rgba(255, 200, 69, 0.15);
-        }
-        
-        .badge-indigo {
-            background: rgba(36, 23, 117, 0.1);
-            color: #241775;
-            border-radius: 100px;
-            font-weight: 600;
-        }
-        
-        .dark .badge-indigo {
-            background: rgba(93, 79, 184, 0.2);
-            color: #9D8FFF;
-        }
-        
-        /* Tab styles */
-        .tab-telos {
-            border-radius: 100px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .tab-telos.active {
-            background: #EF4A81;
-            color: white;
-        }
-        
-        /* Decorative elements */
-        .deco-circle {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.1;
-        }
-        
-        .dark .deco-circle {
-            opacity: 0.15;
-        }
-        
-        /* Check circle */
-        .check-circle {
-            width: 24px;
-            height: 24px;
-            background: #EF4A81;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        
-        /* Animation */
+      * {
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
+      body {
+        background: #ffffff;
+        color: #171717;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .dark body,
+      html.dark body {
+        background: #0d0d0d;
+        color: #f5f5f5;
+      }
+
+      /* Gradient backgrounds */
+      .bg-gradient-pink {
+        background: linear-gradient(135deg, #ef4a81 0%, #ff6b9d 100%);
+      }
+
+      .bg-gradient-yellow {
+        background: linear-gradient(135deg, #ffc845 0%, #ffd970 100%);
+      }
+
+      .bg-gradient-indigo {
+        background: linear-gradient(135deg, #241775 0%, #3d2a9b 100%);
+      }
+
+      /* Text gradients */
+      .text-gradient-pink {
+        background: linear-gradient(135deg, #ef4a81, #ff6b9d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Card styles */
+      .telos-card {
+        background: #ffffff;
+        border: 1px solid #d4d4d4;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .dark .telos-card {
+        background: #1e1e1e;
+        border-color: #333333;
+      }
+
+      .telos-card:hover {
+        border-color: #ef4a81;
+        box-shadow: 0 10px 40px rgba(239, 74, 129, 0.15);
+        transform: translateY(-4px);
+      }
+
+      .dark .telos-card:hover {
+        box-shadow: 0 10px 40px rgba(239, 74, 129, 0.25);
+      }
+
+      .telos-card-dark {
+        background: #171717;
+        border: 1px solid #262626;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .telos-card-dark:hover {
+        border-color: #ef4a81;
+        box-shadow: 0 10px 40px rgba(239, 74, 129, 0.2);
+      }
+
+      /* Button styles */
+      .btn-pink {
+        background: #ef4a81;
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+
+      .btn-pink:hover {
+        background: #d93d6f;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(239, 74, 129, 0.35);
+      }
+
+      .btn-outline {
+        background: transparent;
+        border: 2px solid #171717;
+        color: #171717;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+      }
+
+      .dark .btn-outline {
+        border-color: #f5f5f5;
+        color: #f5f5f5;
+      }
+
+      .btn-outline:hover {
+        background: #171717;
+        color: white;
+      }
+
+      .dark .btn-outline:hover {
+        background: #f5f5f5;
+        color: #171717;
+      }
+
+      /* Badge styles */
+      .badge-pink {
+        background: rgba(239, 74, 129, 0.1);
+        color: #ef4a81;
+        border-radius: 100px;
+        font-weight: 600;
+      }
+
+      .dark .badge-pink {
+        background: rgba(239, 74, 129, 0.2);
+      }
+
+      .badge-yellow {
+        background: rgba(255, 200, 69, 0.2);
+        color: #b38600;
+        border-radius: 100px;
+        font-weight: 600;
+      }
+
+      .dark .badge-yellow {
+        color: #ffc845;
+        background: rgba(255, 200, 69, 0.15);
+      }
+
+      .badge-indigo {
+        background: rgba(36, 23, 117, 0.1);
+        color: #241775;
+        border-radius: 100px;
+        font-weight: 600;
+      }
+
+      .dark .badge-indigo {
+        background: rgba(93, 79, 184, 0.2);
+        color: #9d8fff;
+      }
+
+      /* Tab styles */
+      .tab-telos {
+        border-radius: 100px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .tab-telos.active {
+        background: #ef4a81;
+        color: white;
+      }
+
+      /* Decorative elements */
+      .deco-circle {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.1;
+      }
+
+      .dark .deco-circle {
+        opacity: 0.15;
+      }
+
+      /* Check circle */
+      .check-circle {
+        width: 24px;
+        height: 24px;
+        background: #ef4a81;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      /* Animation */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Dark mode toggle */
+      .dark-toggle {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .dark-toggle:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      .dark .dark-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .dark-toggle .sun-icon {
+        display: none;
+      }
+
+      .dark-toggle .moon-icon {
+        display: block;
+      }
+
+      .dark .dark-toggle .sun-icon {
+        display: block;
+      }
+
+      .dark .dark-toggle .moon-icon {
+        display: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
         .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+          opacity: 1;
+          transform: none;
+          transition: none;
         }
-        
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Dark mode toggle */
-        .dark-toggle {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        
-        .dark-toggle:hover {
-            background: rgba(0, 0, 0, 0.05);
-        }
-        
-        .dark .dark-toggle:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .dark-toggle .sun-icon {
-            display: none;
-        }
-        
-        .dark-toggle .moon-icon {
-            display: block;
-        }
-        
-        .dark .dark-toggle .sun-icon {
-            display: block;
-        }
-        
-        .dark .dark-toggle .moon-icon {
-            display: none;
-        }
-        
-        @media (prefers-reduced-motion: reduce) {
-            .fade-up {
-                opacity: 1;
-                transform: none;
-                transition: none;
-            }
-            .typing-cursor {
-                animation: none;
-            }
-        }
-        
-        /* Typing effect */
-        .typing-container {
-            display: inline-block;
-            min-height: 1.2em;
-        }
-        
-        .typing-text {
-            display: inline;
-        }
-        
         .typing-cursor {
-            display: inline-block;
-            color: #EF4A81;
-            font-weight: 400;
-            animation: blink 1s step-end infinite;
-            margin-left: 2px;
+          animation: none;
         }
-        
-        .typing-container.paused .typing-cursor {
-            animation: none;
-            opacity: 1;
+      }
+
+      /* Typing effect */
+      .typing-container {
+        display: inline-block;
+        min-height: 1.2em;
+      }
+
+      .typing-text {
+        display: inline;
+      }
+
+      .typing-cursor {
+        display: inline-block;
+        color: #ef4a81;
+        font-weight: 400;
+        animation: blink 1s step-end infinite;
+        margin-left: 2px;
+      }
+
+      .typing-container.paused .typing-cursor {
+        animation: none;
+        opacity: 1;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
         }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        50% {
+          opacity: 0;
         }
-        
-        .typing-highlight {
-            color: #EF4A81;
-        }
-        
-        .dark .typing-highlight {
-            color: #FF6B9D;
-        }
-        
-        /* Three.js canvas */
+      }
+
+      .typing-highlight {
+        color: #ef4a81;
+      }
+
+      .dark .typing-highlight {
+        color: #ff6b9d;
+      }
+
+      /* Three.js canvas */
+      #hero-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        opacity: 0.8;
+        pointer-events: none;
+      }
+
+      .dark #hero-canvas {
+        opacity: 1;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 10;
+      }
+
+      /* Large screen adjustments */
+      @media (min-width: 1440px) {
         #hero-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.8;
-            pointer-events: none;
+          opacity: 0.9;
         }
-        
         .dark #hero-canvas {
-            opacity: 1;
+          opacity: 1;
         }
-        
-        .hero-content {
-            position: relative;
-            z-index: 10;
-        }
-        
-        /* Large screen adjustments */
-        @media (min-width: 1440px) {
-            #hero-canvas {
-                opacity: 0.9;
-            }
-            .dark #hero-canvas {
-                opacity: 1;
-            }
-        }
+      }
     </style>
-</head>
-<body class="antialiased bg-white dark:bg-[#0D0D0D] text-dark dark:text-light transition-colors duration-300">
-    
+  </head>
+  <body
+    class="antialiased bg-white dark:bg-[#0D0D0D] text-dark dark:text-light transition-colors duration-300"
+  >
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-[#0D0D0D]/90 backdrop-blur-md border-b border-gray-border dark:border-dark-alt transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="#" class="flex items-center gap-2">
-                    <div class="w-10 h-10 bg-gradient-pink rounded-xl flex items-center justify-center">
-                        <span class="text-white font-bold text-lg">AI</span>
-                    </div>
-                    <span class="font-bold text-xl">Workshop</span>
-                </a>
-                
-                <div class="flex items-center gap-2">
-                    <!-- Dark Mode Toggle -->
-                    <button onclick="toggleDarkMode()" class="dark-toggle" aria-label="Toggle dark mode">
-                        <!-- Moon icon (shown in light mode) -->
-                        <svg class="moon-icon w-5 h-5 text-dark dark:text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                        </svg>
-                        <!-- Sun icon (shown in dark mode) -->
-                        <svg class="sun-icon w-5 h-5 text-brand-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                    </button>
-                    
-                    <a href="#pricing" class="btn-pink px-6 py-2.5 cursor-pointer hidden sm:block">
-                        Đăng ký ngay
-                    </a>
-                </div>
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-[#0D0D0D]/90 backdrop-blur-md border-b border-gray-border dark:border-dark-alt transition-colors"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <a href="#" class="flex items-center gap-2">
+            <div
+              class="w-10 h-10 bg-gradient-pink rounded-xl flex items-center justify-center"
+            >
+              <span class="text-white font-bold text-lg">AI</span>
             </div>
+            <span class="font-bold text-xl">Workshop</span>
+          </a>
+
+          <div class="flex items-center gap-2">
+            <!-- Dark Mode Toggle -->
+            <button
+              onclick="toggleDarkMode()"
+              class="dark-toggle"
+              aria-label="Toggle dark mode"
+            >
+              <!-- Moon icon (shown in light mode) -->
+              <svg
+                class="moon-icon w-5 h-5 text-dark dark:text-light"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
+              <!-- Sun icon (shown in dark mode) -->
+              <svg
+                class="sun-icon w-5 h-5 text-brand-yellow"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+            </button>
+
+            <a
+              href="#pricing"
+              class="btn-pink px-6 py-2.5 cursor-pointer hidden sm:block"
+            >
+              Đăng ký ngay
+            </a>
+          </div>
         </div>
+      </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="pt-28 pb-16 sm:pt-36 sm:pb-24 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-24 relative overflow-hidden min-h-screen flex items-center">
-        <!-- Three.js Canvas -->
-        <canvas id="hero-canvas"></canvas>
-        
-        <!-- Decorative circles -->
-        <div class="deco-circle w-96 h-96 bg-brand-pink -top-48 -right-48 absolute"></div>
-        <div class="deco-circle w-64 h-64 bg-brand-yellow bottom-0 -left-32 absolute"></div>
-        
-        <div class="max-w-7xl 2xl:max-w-[1600px] mx-auto relative hero-content w-full">
-            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-24 items-center">
-                <!-- Left Content -->
-                <div class="fade-up">
-                    <!-- Badge -->
-                    <div class="inline-flex items-center gap-2 badge-pink px-4 py-2 text-sm mb-4">
-                        <span class="w-2 h-2 bg-brand-pink rounded-full animate-pulse"></span>
-                        Live Workshop • 10/12/2025
-                    </div>
-                    
-                    <!-- Series description -->
-                    <p class="text-sm text-gray-mid dark:text-gray-400 mb-4">
-                        Một workshop trong chuỗi sự kiện <span class="text-brand-pink font-semibold">Nghề trong người</span> của <span class="font-semibold text-dark dark:text-white">TELOS ACADEMY</span>
-                    </p>
-                    
-                    <!-- Headline with typing effect -->
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-                        <span class="typing-container">
-                            <span class="typing-text" id="typing-text"></span>
-                            <span class="typing-cursor">|</span>
-                        </span><br>
-                        <span class="text-gradient-pink">trong 30 Phút</span>
-                    </h1>
-                    
-                    <!-- Subheadline -->
-                    <p class="text-lg text-gray-mid dark:text-gray-400 mb-8 max-w-lg leading-relaxed">
-                        Workshop thực chiến cho UX/UI Designer: Dùng AI để biến thiết kế thành website chạy thật, explore nhiều options <span class="text-dark dark:text-white font-semibold">nhanh x10</span>.
-                    </p>
-                    
-                    <!-- CTA Buttons -->
-                    <div class="flex flex-wrap gap-4 mb-10">
-                        <a href="#pricing" class="btn-pink px-8 py-4 text-lg cursor-pointer inline-flex items-center gap-2">
-                            Đăng ký — 249K
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </a>
-                        <a href="#demo" class="btn-outline px-8 py-4 text-lg cursor-pointer inline-flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                            Xem Demo
-                        </a>
-                    </div>
-                    
-                    <!-- Event Info -->
-                    <div class="flex flex-wrap gap-6 text-sm text-gray-mid dark:text-gray-400">
-                        <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-brand-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            <span>19:30 • Thứ Tư, 10/12</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-brand-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                            </svg>
-                            <span>Online qua Google Meet</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-brand-indigo dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>2 tiếng thực hành</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Right Visual -->
-                <div class="fade-up hidden lg:block" style="transition-delay: 150ms;">
-                    <div class="relative">
-                        <!-- Main Card -->
-                        <div class="bg-dark dark:bg-dark-card rounded-3xl p-8 text-white relative overflow-hidden border border-transparent dark:border-dark-alt">
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-brand-pink/20 rounded-full blur-3xl"></div>
-                            <div class="absolute bottom-0 left-0 w-24 h-24 bg-brand-yellow/20 rounded-full blur-2xl"></div>
-                            
-                            <div class="relative">
-                                <!-- Code preview -->
-                                <div class="flex items-center gap-2 mb-4">
-                                    <div class="w-3 h-3 rounded-full bg-brand-pink"></div>
-                                    <div class="w-3 h-3 rounded-full bg-brand-yellow"></div>
-                                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                                </div>
-                                
-                                <div class="font-mono text-sm space-y-2 text-white/80">
-                                    <p><span class="text-brand-pink">const</span> design = figma.<span class="text-brand-yellow">export</span>();</p>
-                                    <p><span class="text-brand-pink">const</span> code = ai.<span class="text-brand-yellow">generate</span>(design);</p>
-                                    <p><span class="text-brand-pink">const</span> url = <span class="text-brand-yellow">deploy</span>(code);</p>
-                                    <p class="text-white/40">// ✅ Live trong 30 phút</p>
-                                </div>
-                                
-                                <!-- Stats -->
-                                <div class="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/10">
-                                    <div class="text-center">
-                                        <div class="text-2xl font-bold text-brand-pink">250+</div>
-                                        <div class="text-xs text-white/50">Học viên</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="text-2xl font-bold text-brand-yellow">15+</div>
-                                        <div class="text-xs text-white/50">Năm exp</div>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="text-2xl font-bold text-white">50%</div>
-                                        <div class="text-xs text-white/50">Time saved</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Floating badges -->
-                        <div class="absolute -top-4 -right-4 bg-brand-yellow text-dark px-4 py-2 rounded-xl font-bold text-sm shadow-lg rotate-6">
-                            NO CODE ✨
-                        </div>
-                        <div class="absolute -bottom-4 -left-4 bg-brand-pink text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg -rotate-3">
-                            LIVE 🔴
-                        </div>
-                    </div>
-                </div>
+    <section
+      class="pt-28 pb-16 sm:pt-36 sm:pb-24 px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-24 relative overflow-hidden min-h-screen flex items-center"
+    >
+      <!-- Three.js Canvas -->
+      <canvas id="hero-canvas"></canvas>
+
+      <!-- Decorative circles -->
+      <div
+        class="deco-circle w-96 h-96 bg-brand-pink -top-48 -right-48 absolute"
+      ></div>
+      <div
+        class="deco-circle w-64 h-64 bg-brand-yellow bottom-0 -left-32 absolute"
+      ></div>
+
+      <div
+        class="max-w-7xl 2xl:max-w-[1600px] mx-auto relative hero-content w-full"
+      >
+        <div
+          class="grid lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-24 items-center"
+        >
+          <!-- Left Content -->
+          <div class="fade-up">
+            <!-- Badge -->
+            <div
+              class="inline-flex items-center gap-2 badge-pink px-4 py-2 text-sm mb-4"
+            >
+              <span
+                class="w-2 h-2 bg-brand-pink rounded-full animate-pulse"
+              ></span>
+              Live Workshop • 10/12/2025
             </div>
+
+            <!-- Series description -->
+            <p class="text-sm text-gray-mid dark:text-gray-400 mb-4">
+              Một workshop trong chuỗi sự kiện
+              <span class="text-brand-pink font-semibold"
+                >Nghề trong người</span
+              >
+              của
+              <span class="font-semibold text-dark dark:text-white"
+                >TELOS ACADEMY</span
+              >
+            </p>
+
+            <!-- Headline with typing effect -->
+            <h1
+              class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6"
+            >
+              <span class="typing-container">
+                <span class="typing-text" id="typing-text"></span>
+                <span class="typing-cursor">|</span> </span
+              ><br />
+              <span class="text-gradient-pink">trong 30 Phút</span>
+            </h1>
+
+            <!-- Subheadline -->
+            <p
+              class="text-lg text-gray-mid dark:text-gray-400 mb-8 max-w-lg leading-relaxed"
+            >
+              Workshop thực chiến cho UX/UI Designer: Dùng AI để biến thiết kế
+              thành website chạy thật, explore nhiều options
+              <span class="text-dark dark:text-white font-semibold"
+                >nhanh x10</span
+              >.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-wrap gap-4 mb-10">
+              <a
+                href="#pricing"
+                class="btn-pink px-8 py-4 text-lg cursor-pointer inline-flex items-center gap-2"
+              >
+                Đăng ký — 249K
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#demo"
+                class="btn-outline px-8 py-4 text-lg cursor-pointer inline-flex items-center gap-2"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                Xem Demo
+              </a>
+            </div>
+
+            <!-- Event Info -->
+            <div
+              class="flex flex-wrap gap-6 text-sm text-gray-mid dark:text-gray-400"
+            >
+              <div class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-brand-pink"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <span>19:30 • Thứ Tư, 10/12</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-brand-yellow"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                <span>Online qua Google Meet</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <svg
+                  class="w-5 h-5 text-brand-indigo dark:text-purple-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>2 tiếng thực hành</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Visual -->
+          <div class="fade-up hidden lg:block" style="transition-delay: 150ms">
+            <div class="relative">
+              <!-- Main Card -->
+              <div
+                class="bg-dark dark:bg-dark-card rounded-3xl p-8 text-white relative overflow-hidden border border-transparent dark:border-dark-alt"
+              >
+                <div
+                  class="absolute top-0 right-0 w-32 h-32 bg-brand-pink/20 rounded-full blur-3xl"
+                ></div>
+                <div
+                  class="absolute bottom-0 left-0 w-24 h-24 bg-brand-yellow/20 rounded-full blur-2xl"
+                ></div>
+
+                <div class="relative">
+                  <!-- Code preview -->
+                  <div class="flex items-center gap-2 mb-4">
+                    <div class="w-3 h-3 rounded-full bg-brand-pink"></div>
+                    <div class="w-3 h-3 rounded-full bg-brand-yellow"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                  </div>
+
+                  <div class="font-mono text-sm space-y-2 text-white/80">
+                    <p>
+                      <span class="text-brand-pink">const</span> design =
+                      figma.<span class="text-brand-yellow">export</span>();
+                    </p>
+                    <p>
+                      <span class="text-brand-pink">const</span> code = ai.<span
+                        class="text-brand-yellow"
+                        >generate</span
+                      >(design);
+                    </p>
+                    <p>
+                      <span class="text-brand-pink">const</span> url =
+                      <span class="text-brand-yellow">deploy</span>(code);
+                    </p>
+                    <p class="text-white/40">// ✅ Live trong 30 phút</p>
+                  </div>
+
+                  <!-- Stats -->
+                  <div
+                    class="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/10"
+                  >
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-brand-pink">250+</div>
+                      <div class="text-xs text-white/50">Học viên</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-brand-yellow">
+                        15+
+                      </div>
+                      <div class="text-xs text-white/50">Năm exp</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-white">50%</div>
+                      <div class="text-xs text-white/50">Time saved</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Floating badges -->
+              <div
+                class="absolute -top-4 -right-4 bg-brand-yellow text-dark px-4 py-2 rounded-xl font-bold text-sm shadow-lg rotate-6"
+              >
+                NO CODE ✨
+              </div>
+              <div
+                class="absolute -bottom-4 -left-4 bg-brand-pink text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg -rotate-3"
+              >
+                LIVE 🔴
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Problem Section -->
-    <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-light dark:bg-dark transition-colors">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-12 fade-up">
-                <span class="badge-pink px-4 py-2 text-sm inline-block mb-4">VẤN ĐỀ</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
-                    Bạn đang <span class="text-gradient-pink">stuck</span> ở đâu?
-                </h2>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div class="telos-card p-6 cursor-pointer fade-up">
-                    <div class="w-14 h-14 bg-brand-pink/10 dark:bg-brand-pink/20 rounded-2xl flex items-center justify-center mb-6">
-                        <span class="text-3xl font-extrabold text-brand-pink">01</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Demo cho khách = Static</h3>
-                    <p class="text-gray-mid dark:text-gray-400 leading-relaxed">
-                        Client không hình dung được, cứ hỏi "click vào thì nó chạy sao?" mà prototype Figma không đủ real.
-                    </p>
-                </div>
-                
-                <!-- Card 2 -->
-                <div class="telos-card p-6 cursor-pointer fade-up" style="transition-delay: 100ms;">
-                    <div class="w-14 h-14 bg-brand-yellow/20 dark:bg-brand-yellow/15 rounded-2xl flex items-center justify-center mb-6">
-                        <span class="text-3xl font-extrabold text-brand-yellow" style="color: #B38600;">02</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Explore options = Tốn time</h3>
-                    <p class="text-gray-mid dark:text-gray-400 leading-relaxed">
-                        Mỗi option mất 2-3 ngày thiết kế lại, deadline không cho phép explore nhiều hướng.
-                    </p>
-                </div>
-                
-                <!-- Card 3 -->
-                <div class="telos-card p-6 cursor-pointer fade-up" style="transition-delay: 200ms;">
-                    <div class="w-14 h-14 bg-brand-indigo/10 dark:bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6">
-                        <span class="text-3xl font-extrabold text-brand-indigo dark:text-purple-400">03</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Portfolio = Toàn mockup</h3>
-                    <p class="text-gray-mid dark:text-gray-400 leading-relaxed">
-                        Recruiter muốn thấy product thật, không chỉ là hình đẹp trên Behance.
-                    </p>
-                </div>
-            </div>
+    <section
+      class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-light dark:bg-dark transition-colors"
+    >
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12 fade-up">
+          <span class="badge-pink px-4 py-2 text-sm inline-block mb-4"
+            >VẤN ĐỀ</span
+          >
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
+            Bạn đang <span class="text-gradient-pink">stuck</span> ở đâu?
+          </h2>
         </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Card 1 -->
+          <div class="telos-card p-6 cursor-pointer fade-up">
+            <div
+              class="w-14 h-14 bg-brand-pink/10 dark:bg-brand-pink/20 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <span class="text-3xl font-extrabold text-brand-pink">01</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Demo cho khách = Static</h3>
+            <p class="text-gray-mid dark:text-gray-400 leading-relaxed">
+              Client không hình dung được, cứ hỏi "click vào thì nó chạy sao?"
+              mà prototype Figma không đủ real.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div
+            class="telos-card p-6 cursor-pointer fade-up"
+            style="transition-delay: 100ms"
+          >
+            <div
+              class="w-14 h-14 bg-brand-yellow/20 dark:bg-brand-yellow/15 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <span
+                class="text-3xl font-extrabold text-brand-yellow"
+                style="color: #b38600"
+                >02</span
+              >
+            </div>
+            <h3 class="text-xl font-bold mb-3">Explore options = Tốn time</h3>
+            <p class="text-gray-mid dark:text-gray-400 leading-relaxed">
+              Mỗi option mất 2-3 ngày thiết kế lại, deadline không cho phép
+              explore nhiều hướng.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div
+            class="telos-card p-6 cursor-pointer fade-up"
+            style="transition-delay: 200ms"
+          >
+            <div
+              class="w-14 h-14 bg-brand-indigo/10 dark:bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6"
+            >
+              <span
+                class="text-3xl font-extrabold text-brand-indigo dark:text-purple-400"
+                >03</span
+              >
+            </div>
+            <h3 class="text-xl font-bold mb-3">Portfolio = Toàn mockup</h3>
+            <p class="text-gray-mid dark:text-gray-400 leading-relaxed">
+              Recruiter muốn thấy product thật, không chỉ là hình đẹp trên
+              Behance.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Solution Section -->
     <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-12 fade-up">
-                <span class="badge-yellow px-4 py-2 text-sm inline-block mb-4">GIẢI PHÁP</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
-                    AI làm code. <span class="text-gradient-pink">Bạn làm design.</span>
-                </h2>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="text-center p-8 fade-up">
-                    <div class="w-20 h-20 bg-gradient-pink rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-pink/30">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Figma → Live Website</h3>
-                    <p class="text-gray-mid dark:text-gray-400">Export → AI code → Deploy demo có thể click, scroll, interact.</p>
-                </div>
-                
-                <div class="text-center p-8 fade-up" style="transition-delay: 100ms;">
-                    <div class="w-20 h-20 bg-gradient-yellow rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-yellow/30">
-                        <svg class="w-10 h-10 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Explore Options x10</h3>
-                    <p class="text-gray-mid dark:text-gray-400">1 prompt = 1 option. 30 phút có 3-4 variations để so sánh.</p>
-                </div>
-                
-                <div class="text-center p-8 fade-up" style="transition-delay: 200ms;">
-                    <div class="w-20 h-20 bg-gradient-indigo rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-indigo/30">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Portfolio Live Demos</h3>
-                    <p class="text-gray-mid dark:text-gray-400">Mockup → Website thật. Có URL gửi recruiter ngay.</p>
-                </div>
-            </div>
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12 fade-up">
+          <span class="badge-yellow px-4 py-2 text-sm inline-block mb-4"
+            >GIẢI PHÁP</span
+          >
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
+            AI làm code. <span class="text-gradient-pink">Bạn làm design.</span>
+          </h2>
         </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="text-center p-8 fade-up">
+            <div
+              class="w-20 h-20 bg-gradient-pink rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-pink/30"
+            >
+              <svg
+                class="w-10 h-10 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Figma → Live Website</h3>
+            <p class="text-gray-mid dark:text-gray-400">
+              Export → AI code → Deploy demo có thể click, scroll, interact.
+            </p>
+          </div>
+
+          <div class="text-center p-8 fade-up" style="transition-delay: 100ms">
+            <div
+              class="w-20 h-20 bg-gradient-yellow rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-yellow/30"
+            >
+              <svg
+                class="w-10 h-10 text-dark"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Explore Options x10</h3>
+            <p class="text-gray-mid dark:text-gray-400">
+              1 prompt = 1 option. 30 phút có 3-4 variations để so sánh.
+            </p>
+          </div>
+
+          <div class="text-center p-8 fade-up" style="transition-delay: 200ms">
+            <div
+              class="w-20 h-20 bg-gradient-indigo rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-indigo/30"
+            >
+              <svg
+                class="w-10 h-10 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Portfolio Live Demos</h3>
+            <p class="text-gray-mid dark:text-gray-400">
+              Mockup → Website thật. Có URL gửi recruiter ngay.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Demo Section -->
-    <section id="demo" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-dark text-white">
-        <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-12 fade-up">
-                <span class="badge-pink px-4 py-2 text-sm inline-block mb-4">DEMO</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
-                    Xem trước <span class="text-brand-pink">workflow</span>
-                </h2>
-            </div>
-            
-            <!-- Tabs -->
-            <div class="flex flex-wrap justify-center gap-2 mb-8 fade-up">
-                <button onclick="switchTab(0)" class="tab-telos active px-6 py-3 text-sm border border-white/20 cursor-pointer" data-tab="0">
-                    Figma → Demo
-                </button>
-                <button onclick="switchTab(1)" class="tab-telos px-6 py-3 text-sm border border-white/20 cursor-pointer hover:bg-white/10" data-tab="1">
-                    Explore Options
-                </button>
-                <button onclick="switchTab(2)" class="tab-telos px-6 py-3 text-sm border border-white/20 cursor-pointer hover:bg-white/10" data-tab="2">
-                    Output
-                </button>
-            </div>
-            
-            <!-- Tab Content -->
-            <div class="telos-card-dark p-8 sm:p-12 fade-up">
-                <!-- Tab 1 -->
-                <div class="tab-content" data-content="0">
-                    <div class="flex flex-col lg:flex-row items-center justify-center gap-8 mb-10">
-                        <div class="bg-dark-alt border border-white/10 rounded-2xl p-6 text-center">
-                            <div class="text-4xl mb-2">📐</div>
-                            <span class="text-sm text-white/60">Figma Static</span>
-                        </div>
-                        <div class="text-3xl text-brand-pink">→</div>
-                        <div class="bg-brand-pink/10 border border-brand-pink/30 rounded-2xl p-6 text-center">
-                            <div class="text-4xl mb-2">🌐</div>
-                            <span class="text-sm text-brand-pink font-semibold">Live Website</span>
-                        </div>
-                    </div>
-                    
-                    <div class="grid sm:grid-cols-4 gap-4">
-                        <div class="bg-dark-alt rounded-xl p-4 border-l-4 border-brand-pink">
-                            <span class="text-2xl font-bold text-brand-pink">01</span>
-                            <p class="text-sm mt-2 text-white/70">Screenshot từ Figma</p>
-                        </div>
-                        <div class="bg-dark-alt rounded-xl p-4 border-l-4 border-brand-yellow">
-                            <span class="text-2xl font-bold text-brand-yellow">02</span>
-                            <p class="text-sm mt-2 text-white/70">Describe cho AI</p>
-                        </div>
-                        <div class="bg-dark-alt rounded-xl p-4 border-l-4 border-brand-indigo">
-                            <span class="text-2xl font-bold text-white">03</span>
-                            <p class="text-sm mt-2 text-white/70">Generate code</p>
-                        </div>
-                        <div class="bg-dark-alt rounded-xl p-4 border-l-4 border-green-400">
-                            <span class="text-2xl font-bold text-green-400">04</span>
-                            <p class="text-sm mt-2 text-white/70">Deploy & Share</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Tab 2 -->
-                <div class="tab-content hidden" data-content="1">
-                    <p class="text-center text-white/60 mb-8">Brief: "Landing page app fitness" → 4 hướng trong 1 giờ:</p>
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                        <div class="aspect-video bg-white/90 rounded-xl flex items-center justify-center font-semibold text-dark text-sm">Minimalist</div>
-                        <div class="aspect-video bg-dark-alt rounded-xl border border-white/10 flex items-center justify-center font-semibold text-sm">Dark Mode</div>
-                        <div class="aspect-video bg-gradient-to-br from-brand-pink to-brand-indigo rounded-xl flex items-center justify-center font-semibold text-sm">Gradient</div>
-                        <div class="aspect-video bg-brand-yellow rounded-xl flex items-center justify-center font-semibold text-dark text-sm">Playful</div>
-                    </div>
-                    <p class="text-center text-brand-yellow font-semibold">→ 4 live demos • 1 giờ thay vì 1 tuần 🚀</p>
-                </div>
-                
-                <!-- Tab 3 -->
-                <div class="tab-content hidden" data-content="2">
-                    <div class="max-w-md mx-auto space-y-4">
-                        <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span>1 Portfolio website live (có URL)</span>
-                        </div>
-                        <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span>3 Landing page variations</span>
-                        </div>
-                        <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span>Workflow Figma → AI → Deploy</span>
-                        </div>
-                        <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span>Prompt templates tái sử dụng</span>
-                        </div>
-                        <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span>Recording workshop xem lại</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <section
+      id="demo"
+      class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-dark text-white"
+    >
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12 fade-up">
+          <span class="badge-pink px-4 py-2 text-sm inline-block mb-4"
+            >DEMO</span
+          >
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
+            Xem trước <span class="text-brand-pink">workflow</span>
+          </h2>
         </div>
+
+        <!-- Tabs -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8 fade-up">
+          <button
+            onclick="switchTab(0)"
+            class="tab-telos active px-6 py-3 text-sm border border-white/20 cursor-pointer"
+            data-tab="0"
+          >
+            Figma → Demo
+          </button>
+          <button
+            onclick="switchTab(1)"
+            class="tab-telos px-6 py-3 text-sm border border-white/20 cursor-pointer hover:bg-white/10"
+            data-tab="1"
+          >
+            Explore Options
+          </button>
+          <button
+            onclick="switchTab(2)"
+            class="tab-telos px-6 py-3 text-sm border border-white/20 cursor-pointer hover:bg-white/10"
+            data-tab="2"
+          >
+            Output
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="telos-card-dark p-8 sm:p-12 fade-up">
+          <!-- Tab 1 -->
+          <div class="tab-content" data-content="0">
+            <div
+              class="flex flex-col lg:flex-row items-center justify-center gap-8 mb-10"
+            >
+              <div
+                class="bg-dark-alt border border-white/10 rounded-2xl p-6 text-center"
+              >
+                <div class="text-4xl mb-2">📐</div>
+                <span class="text-sm text-white/60">Figma Static</span>
+              </div>
+              <div class="text-3xl text-brand-pink">→</div>
+              <div
+                class="bg-brand-pink/10 border border-brand-pink/30 rounded-2xl p-6 text-center"
+              >
+                <div class="text-4xl mb-2">🌐</div>
+                <span class="text-sm text-brand-pink font-semibold"
+                  >Live Website</span
+                >
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-4 gap-4">
+              <div
+                class="bg-dark-alt rounded-xl p-4 border-l-4 border-brand-pink"
+              >
+                <span class="text-2xl font-bold text-brand-pink">01</span>
+                <p class="text-sm mt-2 text-white/70">Screenshot từ Figma</p>
+              </div>
+              <div
+                class="bg-dark-alt rounded-xl p-4 border-l-4 border-brand-yellow"
+              >
+                <span class="text-2xl font-bold text-brand-yellow">02</span>
+                <p class="text-sm mt-2 text-white/70">Describe cho AI</p>
+              </div>
+              <div
+                class="bg-dark-alt rounded-xl p-4 border-l-4 border-brand-indigo"
+              >
+                <span class="text-2xl font-bold text-white">03</span>
+                <p class="text-sm mt-2 text-white/70">Generate code</p>
+              </div>
+              <div
+                class="bg-dark-alt rounded-xl p-4 border-l-4 border-green-400"
+              >
+                <span class="text-2xl font-bold text-green-400">04</span>
+                <p class="text-sm mt-2 text-white/70">Deploy & Share</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2 -->
+          <div class="tab-content hidden" data-content="1">
+            <p class="text-center text-white/60 mb-8">
+              Brief: "Landing page app fitness" → 4 hướng trong 1 giờ:
+            </p>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div
+                class="aspect-video bg-white/90 rounded-xl flex items-center justify-center font-semibold text-dark text-sm"
+              >
+                Minimalist
+              </div>
+              <div
+                class="aspect-video bg-dark-alt rounded-xl border border-white/10 flex items-center justify-center font-semibold text-sm"
+              >
+                Dark Mode
+              </div>
+              <div
+                class="aspect-video bg-gradient-to-br from-brand-pink to-brand-indigo rounded-xl flex items-center justify-center font-semibold text-sm"
+              >
+                Gradient
+              </div>
+              <div
+                class="aspect-video bg-brand-yellow rounded-xl flex items-center justify-center font-semibold text-dark text-sm"
+              >
+                Playful
+              </div>
+            </div>
+            <p class="text-center text-brand-yellow font-semibold">
+              → 4 live demos • 1 giờ thay vì 1 tuần 🚀
+            </p>
+          </div>
+
+          <!-- Tab 3 -->
+          <div class="tab-content hidden" data-content="2">
+            <div class="max-w-md mx-auto space-y-4">
+              <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span>1 Portfolio website live (có URL)</span>
+              </div>
+              <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span>3 Landing page variations</span>
+              </div>
+              <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span>Workflow Figma → AI → Deploy</span>
+              </div>
+              <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span>Prompt templates tái sử dụng</span>
+              </div>
+              <div class="flex items-center gap-4 bg-dark-alt rounded-xl p-4">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span>Recording workshop xem lại</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Agenda Section -->
     <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-12 fade-up">
-                <span class="badge-indigo px-4 py-2 text-sm inline-block mb-4">AGENDA</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
-                    2 giờ <span class="text-gradient-pink">thực hành</span>
-                </h2>
-            </div>
-            
-            <div class="space-y-4">
-                <div class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up">
-                    <div class="w-20 text-center flex-shrink-0">
-                        <span class="text-2xl font-bold text-brand-pink">0-15'</span>
-                    </div>
-                    <div class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"></div>
-                    <div>
-                        <h3 class="font-bold text-lg">Setup & Mindset</h3>
-                        <p class="text-gray-mid dark:text-gray-400 text-sm">Cách describe design cho AI hiểu đúng ý</p>
-                    </div>
-                </div>
-                
-                <div class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up" style="transition-delay: 50ms;">
-                    <div class="w-20 text-center flex-shrink-0">
-                        <span class="text-2xl font-bold text-brand-yellow" style="color: #B38600;">15-45'</span>
-                    </div>
-                    <div class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"></div>
-                    <div>
-                        <h3 class="font-bold text-lg">Use Case 1: Figma → Live Demo</h3>
-                        <p class="text-gray-mid dark:text-gray-400 text-sm">Chuyển 1 design có sẵn thành website chạy thật</p>
-                    </div>
-                </div>
-                
-                <div class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up" style="transition-delay: 100ms;">
-                    <div class="w-20 text-center flex-shrink-0">
-                        <span class="text-2xl font-bold text-brand-indigo dark:text-purple-400">45-75'</span>
-                    </div>
-                    <div class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"></div>
-                    <div>
-                        <h3 class="font-bold text-lg">Use Case 2: Explore Options</h3>
-                        <p class="text-gray-mid dark:text-gray-400 text-sm">Tạo 3 variations UX/UI từ 1 concept gốc</p>
-                    </div>
-                </div>
-                
-                <div class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up" style="transition-delay: 150ms;">
-                    <div class="w-20 text-center flex-shrink-0">
-                        <span class="text-2xl font-bold text-brand-pink">75-105'</span>
-                    </div>
-                    <div class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"></div>
-                    <div>
-                        <h3 class="font-bold text-lg">Build Portfolio</h3>
-                        <p class="text-gray-mid dark:text-gray-400 text-sm">Gom các demo thành portfolio + deploy GitHub Pages</p>
-                    </div>
-                </div>
-                
-                <div class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up" style="transition-delay: 200ms;">
-                    <div class="w-20 text-center flex-shrink-0">
-                        <span class="text-2xl font-bold text-brand-yellow" style="color: #B38600;">105-120'</span>
-                    </div>
-                    <div class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"></div>
-                    <div>
-                        <h3 class="font-bold text-lg">Q&A + Tips</h3>
-                        <p class="text-gray-mid dark:text-gray-400 text-sm">Workflow tối ưu, dùng free tier hiệu quả</p>
-                    </div>
-                </div>
-            </div>
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12 fade-up">
+          <span class="badge-indigo px-4 py-2 text-sm inline-block mb-4"
+            >AGENDA</span
+          >
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
+            2 giờ <span class="text-gradient-pink">thực hành</span>
+          </h2>
         </div>
+
+        <div class="space-y-4">
+          <div
+            class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up"
+          >
+            <div class="w-20 text-center flex-shrink-0">
+              <span class="text-2xl font-bold text-brand-pink">0-15'</span>
+            </div>
+            <div
+              class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"
+            ></div>
+            <div>
+              <h3 class="font-bold text-lg">Setup & Mindset</h3>
+              <p class="text-gray-mid dark:text-gray-400 text-sm">
+                Cách describe design cho AI hiểu đúng ý
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up"
+            style="transition-delay: 50ms"
+          >
+            <div class="w-20 text-center flex-shrink-0">
+              <span
+                class="text-2xl font-bold text-brand-yellow"
+                style="color: #b38600"
+                >15-45'</span
+              >
+            </div>
+            <div
+              class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"
+            ></div>
+            <div>
+              <h3 class="font-bold text-lg">Use Case 1: Figma → Live Demo</h3>
+              <p class="text-gray-mid dark:text-gray-400 text-sm">
+                Chuyển 1 design có sẵn thành website chạy thật
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up"
+            style="transition-delay: 100ms"
+          >
+            <div class="w-20 text-center flex-shrink-0">
+              <span
+                class="text-2xl font-bold text-brand-indigo dark:text-purple-400"
+                >45-75'</span
+              >
+            </div>
+            <div
+              class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"
+            ></div>
+            <div>
+              <h3 class="font-bold text-lg">Use Case 2: Explore Options</h3>
+              <p class="text-gray-mid dark:text-gray-400 text-sm">
+                Tạo 3 variations UX/UI từ 1 concept gốc
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up"
+            style="transition-delay: 150ms"
+          >
+            <div class="w-20 text-center flex-shrink-0">
+              <span class="text-2xl font-bold text-brand-pink">75-105'</span>
+            </div>
+            <div
+              class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"
+            ></div>
+            <div>
+              <h3 class="font-bold text-lg">Build Portfolio</h3>
+              <p class="text-gray-mid dark:text-gray-400 text-sm">
+                Gom các demo thành portfolio + deploy GitHub Pages
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="telos-card p-6 flex gap-6 items-center cursor-pointer fade-up"
+            style="transition-delay: 200ms"
+          >
+            <div class="w-20 text-center flex-shrink-0">
+              <span
+                class="text-2xl font-bold text-brand-yellow"
+                style="color: #b38600"
+                >105-120'</span
+              >
+            </div>
+            <div
+              class="h-12 w-px bg-gray-border dark:bg-dark-alt hidden sm:block"
+            ></div>
+            <div>
+              <h3 class="font-bold text-lg">Q&A + Tips</h3>
+              <p class="text-gray-mid dark:text-gray-400 text-sm">
+                Workflow tối ưu, dùng free tier hiệu quả
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Trainer Section -->
-    <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-light dark:bg-dark transition-colors">
-        <div class="max-w-4xl mx-auto">
-            <div class="telos-card p-8 sm:p-12 fade-up">
-                <div class="flex flex-col md:flex-row gap-8 items-center">
-                    <!-- Avatar -->
-                    <div class="relative flex-shrink-0">
-                        <div class="w-32 h-32 bg-gradient-pink rounded-3xl flex items-center justify-center shadow-lg shadow-brand-pink/30">
-                            <span class="text-5xl font-extrabold text-white">T</span>
-                        </div>
-                        <div class="absolute -bottom-2 -right-2 bg-brand-yellow text-dark px-3 py-1 rounded-lg text-xs font-bold">
-                            TRAINER
-                        </div>
-                    </div>
-                    
-                    <!-- Info -->
-                    <div class="flex-1 text-center md:text-left">
-                        <h3 class="text-3xl font-bold mb-2">Tony</h3>
-                        <p class="text-gray-mid dark:text-gray-400 mb-4">AI Educator & Entrepreneur</p>
-                        
-                        <!-- Stats -->
-                        <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-4">
-                            <span class="badge-pink px-4 py-2 text-sm">15+ năm dev</span>
-                            <span class="badge-yellow px-4 py-2 text-sm">10+ năm automation</span>
-                            <span class="badge-indigo px-4 py-2 text-sm">250+ học viên</span>
-                        </div>
-                        
-                        <!-- Tags -->
-                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-                            <span class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium">CTO @ GOHA</span>
-                            <span class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium">Founder @ Vân Tay Media</span>
-                            <span class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium">Founder @ Vibery Product Studio</span>
-                            <span class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium">MSE AI @ FPT</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Quote -->
-                <blockquote class="mt-8 text-center text-lg text-gray-mid dark:text-gray-400 italic border-l-4 border-brand-pink pl-6 bg-light dark:bg-dark-alt rounded-r-xl py-4">
-                    "Tôi đã tiết kiệm <span class="text-dark dark:text-white font-semibold not-italic">50%+ thời gian</span> ở 2 agency bằng AI automation. Workshop này là workflow tôi dùng <span class="text-brand-pink font-semibold not-italic">hàng ngày</span>."
-                </blockquote>
+    <section
+      class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-light dark:bg-dark transition-colors"
+    >
+      <div class="max-w-4xl mx-auto">
+        <div class="telos-card p-8 sm:p-12 fade-up">
+          <div class="flex flex-col md:flex-row gap-8 items-center">
+            <!-- Avatar -->
+            <div class="relative flex-shrink-0">
+              <div
+                class="w-32 h-32 bg-gradient-pink rounded-3xl flex items-center justify-center shadow-lg shadow-brand-pink/30"
+              >
+                <span class="text-5xl font-extrabold text-white">T</span>
+              </div>
+              <div
+                class="absolute -bottom-2 -right-2 bg-brand-yellow text-dark px-3 py-1 rounded-lg text-xs font-bold"
+              >
+                TRAINER
+              </div>
             </div>
+
+            <!-- Info -->
+            <div class="flex-1 text-center md:text-left">
+              <h3 class="text-3xl font-bold mb-2">Tony</h3>
+              <p class="text-gray-mid dark:text-gray-400 mb-4">
+                AI Educator & Entrepreneur
+              </p>
+
+              <!-- Stats -->
+              <div
+                class="flex flex-wrap gap-3 justify-center md:justify-start mb-4"
+              >
+                <span class="badge-pink px-4 py-2 text-sm">15+ năm dev</span>
+                <span class="badge-yellow px-4 py-2 text-sm"
+                  >10+ năm automation</span
+                >
+                <span class="badge-indigo px-4 py-2 text-sm"
+                  >250+ học viên</span
+                >
+              </div>
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                <span
+                  class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium"
+                  >CTO @ GOHA</span
+                >
+                <span
+                  class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium"
+                  >Founder @ Vân Tay Media</span
+                >
+                <span
+                  class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium"
+                  >Founder @ Vibery Product Studio</span
+                >
+                <span
+                  class="bg-dark dark:bg-light text-white dark:text-dark px-3 py-1 rounded-lg text-xs font-medium"
+                  >MSE AI @ FPT</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Quote -->
+          <blockquote
+            class="mt-8 text-center text-lg text-gray-mid dark:text-gray-400 italic border-l-4 border-brand-pink pl-6 bg-light dark:bg-dark-alt rounded-r-xl py-4"
+          >
+            "Tôi đã tiết kiệm
+            <span class="text-dark dark:text-white font-semibold not-italic"
+              >50%+ thời gian</span
+            >
+            ở 2 agency bằng AI automation. Workshop này là workflow tôi dùng
+            <span class="text-brand-pink font-semibold not-italic"
+              >hàng ngày</span
+            >."
+          </blockquote>
         </div>
+      </div>
     </section>
 
     <!-- FAQ Section -->
     <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-12 fade-up">
-                <span class="badge-yellow px-4 py-2 text-sm inline-block mb-4">FAQ</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
-                    Câu hỏi <span class="text-gradient-pink">thường gặp</span>
-                </h2>
-            </div>
-            
-            <div class="space-y-4">
-                <div class="telos-card p-6 cursor-pointer fade-up">
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-sm">Q</span>
-                        </div>
-                        <div>
-                            <h3 class="font-bold mb-2">Tôi không biết code có tham gia được không?</h3>
-                            <p class="text-gray-mid dark:text-gray-400">Hoàn toàn được. Gemini & Claude viết code, bạn chỉ cần describe design và review output.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="telos-card p-6 cursor-pointer fade-up" style="transition-delay: 50ms;">
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-sm">Q</span>
-                        </div>
-                        <div>
-                            <h3 class="font-bold mb-2">AI tạo ra design generic thì sao?</h3>
-                            <p class="text-gray-mid dark:text-gray-400">Workshop dạy cách describe chi tiết: layout, spacing, style, interactions. Và cách iterate để match style riêng.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="telos-card p-6 cursor-pointer fade-up" style="transition-delay: 100ms;">
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-sm">Q</span>
-                        </div>
-                        <div>
-                            <h3 class="font-bold mb-2">2 tiếng có đủ không?</h3>
-                            <p class="text-gray-mid dark:text-gray-400">Đủ để làm 2 use cases + deploy portfolio. Có recording để xem lại và practice thêm.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="telos-card p-6 cursor-pointer fade-up" style="transition-delay: 150ms;">
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-sm">Q</span>
-                        </div>
-                        <div>
-                            <h3 class="font-bold mb-2">Figma đã có prototype rồi, cần gì nữa?</h3>
-                            <p class="text-gray-mid dark:text-gray-400">Prototype ≠ Live website. Client muốn "website thật" — gửi link, xem mobile, không cần mở Figma.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-12 fade-up">
+          <span class="badge-yellow px-4 py-2 text-sm inline-block mb-4"
+            >FAQ</span
+          >
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold">
+            Câu hỏi <span class="text-gradient-pink">thường gặp</span>
+          </h2>
         </div>
+
+        <div class="space-y-4">
+          <div class="telos-card p-6 cursor-pointer fade-up">
+            <div class="flex items-start gap-4">
+              <div
+                class="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center flex-shrink-0"
+              >
+                <span class="text-white font-bold text-sm">Q</span>
+              </div>
+              <div>
+                <h3 class="font-bold mb-2">
+                  Tôi không biết code có tham gia được không?
+                </h3>
+                <p class="text-gray-mid dark:text-gray-400">
+                  Hoàn toàn được. Gemini & Claude viết code, bạn chỉ cần
+                  describe design và review output.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="telos-card p-6 cursor-pointer fade-up"
+            style="transition-delay: 50ms"
+          >
+            <div class="flex items-start gap-4">
+              <div
+                class="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center flex-shrink-0"
+              >
+                <span class="text-white font-bold text-sm">Q</span>
+              </div>
+              <div>
+                <h3 class="font-bold mb-2">
+                  AI tạo ra design generic thì sao?
+                </h3>
+                <p class="text-gray-mid dark:text-gray-400">
+                  Workshop dạy cách describe chi tiết: layout, spacing, style,
+                  interactions. Và cách iterate để match style riêng.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="telos-card p-6 cursor-pointer fade-up"
+            style="transition-delay: 100ms"
+          >
+            <div class="flex items-start gap-4">
+              <div
+                class="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center flex-shrink-0"
+              >
+                <span class="text-white font-bold text-sm">Q</span>
+              </div>
+              <div>
+                <h3 class="font-bold mb-2">2 tiếng có đủ không?</h3>
+                <p class="text-gray-mid dark:text-gray-400">
+                  Đủ để làm 2 use cases + deploy portfolio. Có recording để xem
+                  lại và practice thêm.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="telos-card p-6 cursor-pointer fade-up"
+            style="transition-delay: 150ms"
+          >
+            <div class="flex items-start gap-4">
+              <div
+                class="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center flex-shrink-0"
+              >
+                <span class="text-white font-bold text-sm">Q</span>
+              </div>
+              <div>
+                <h3 class="font-bold mb-2">
+                  Figma đã có prototype rồi, cần gì nữa?
+                </h3>
+                <p class="text-gray-mid dark:text-gray-400">
+                  Prototype ≠ Live website. Client muốn "website thật" — gửi
+                  link, xem mobile, không cần mở Figma.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Pricing Section with Checkout -->
-    <section id="pricing" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-dark text-white">
-        <div class="max-w-md mx-auto">
-            <div class="relative fade-up">
-                <!-- Glow -->
-                <div class="absolute -inset-4 bg-gradient-to-r from-brand-pink via-brand-yellow to-brand-pink rounded-3xl opacity-30 blur-2xl"></div>
-                
-                <div class="relative bg-white dark:bg-dark-card text-dark dark:text-white rounded-3xl p-8 sm:p-10 border border-transparent dark:border-dark-alt">
-                    <div class="text-center">
-                        <span class="badge-pink px-4 py-2 text-sm inline-block mb-6">WORKSHOP PASS</span>
-                        
-                        <div class="mb-2">
-                            <span class="text-gray-mid dark:text-gray-400 line-through text-lg">399.000đ</span>
-                        </div>
-                        <div class="text-6xl sm:text-7xl font-extrabold text-gradient-pink mb-4" id="product-price">249K</div>
-                    </div>
-                    
-                    <div class="space-y-3 text-left mb-8">
-                        <div class="flex items-center gap-3">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span class="font-medium">Live session 2 tiếng thực hành</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span class="font-medium">Recording xem lại không giới hạn</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span class="font-medium">Prompt templates & resources</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="check-circle">
-                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </div>
-                            <span class="font-medium">Q&A trực tiếp với trainer</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Checkout Form -->
-                    <div id="checkout-error" class="hidden bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl p-4 mb-4 text-sm"></div>
-                    <div id="checkout-success" class="hidden bg-green-500/10 border border-green-500/30 text-green-400 rounded-xl p-4 mb-4 text-sm"></div>
-                    
-                    <form id="checkout-form" class="space-y-4">
-                        <!-- Quantity -->
-                        <div class="form-group">
-                            <label class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400">Số lượng vé</label>
-                            <div class="flex items-center gap-3">
-                                <button type="button" onclick="changeQuantity(-1)" class="w-10 h-10 rounded-lg bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt flex items-center justify-center text-xl font-bold hover:border-brand-pink transition-colors">−</button>
-                                <input type="number" id="quantity" value="1" min="1" readonly class="w-16 h-10 text-center bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt rounded-lg font-semibold">
-                                <button type="button" onclick="changeQuantity(1)" class="w-10 h-10 rounded-lg bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt flex items-center justify-center text-xl font-bold hover:border-brand-pink transition-colors">+</button>
-                            </div>
-                        </div>
-                        
-                        <!-- Full Name -->
-                        <div class="form-group">
-                            <label for="customer_name" class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400">Họ tên *</label>
-                            <input type="text" id="customer_name" required placeholder="Nguyễn Văn A" 
-                                class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors placeholder:text-gray-mid/50">
-                        </div>
-                        
-                        <!-- Email -->
-                        <div class="form-group">
-                            <label for="customer_email" class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400">Email *</label>
-                            <input type="email" id="customer_email" required placeholder="email@example.com"
-                                class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors placeholder:text-gray-mid/50">
-                        </div>
-                        
-                        <!-- Phone -->
-                        <div class="form-group">
-                            <label for="customer_phone" class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400">Số điện thoại *</label>
-                            <input type="tel" id="customer_phone" required placeholder="0901234567"
-                                class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors placeholder:text-gray-mid/50">
-                        </div>
-                        
-                        <!-- Coupon -->
-                        <div class="form-group">
-                            <label class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400">Mã giảm giá</label>
-                            <div class="flex gap-2">
-                                <input type="text" id="coupon_code" placeholder="Nhập mã coupon"
-                                    class="flex-1 px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors placeholder:text-gray-mid/50">
-                                <button type="button" onclick="applyCoupon()" class="px-4 py-3 rounded-xl bg-brand-yellow text-dark font-semibold hover:bg-brand-yellow/80 transition-colors">
-                                    Áp dụng
-                                </button>
-                            </div>
-                            <div id="applied-coupon" class="hidden mt-2 text-sm text-green-400 flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                                <span>Đã áp dụng: <strong id="coupon-name"></strong></span>
-                            </div>
-                        </div>
-                        
-                        <!-- Payment Method -->
-                        <div class="form-group">
-                            <label for="payment_method" class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400">Phương thức thanh toán</label>
-                            <select id="payment_method" 
-                                class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors">
-                                <option value="bacs">Chuyển khoản ngân hàng</option>
-                                <option value="cod">Thanh toán khi nhận hàng</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Total -->
-                        <div class="bg-light dark:bg-dark-alt rounded-xl p-4 flex justify-between items-center">
-                            <span class="font-medium">Tổng thanh toán:</span>
-                            <span class="text-2xl font-bold text-gradient-pink" id="total-price">249.000₫</span>
-                        </div>
-                        
-                        <!-- Submit -->
-                        <button type="submit" id="submit-btn" class="btn-pink w-full py-4 text-lg font-semibold flex items-center justify-center gap-2">
-                            <span>Đăng ký ngay</span>
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </button>
-                    </form>
-                </div>
+    <section
+      id="pricing"
+      class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-dark text-white"
+    >
+      <div class="max-w-md mx-auto">
+        <div class="relative fade-up">
+          <!-- Glow -->
+          <div
+            class="absolute -inset-4 bg-gradient-to-r from-brand-pink via-brand-yellow to-brand-pink rounded-3xl opacity-30 blur-2xl"
+          ></div>
+
+          <div
+            class="relative bg-white dark:bg-dark-card text-dark dark:text-white rounded-3xl p-8 sm:p-10 border border-transparent dark:border-dark-alt"
+          >
+            <div class="text-center">
+              <span class="badge-pink px-4 py-2 text-sm inline-block mb-6"
+                >WORKSHOP PASS</span
+              >
+
+              <div class="mb-2">
+                <span
+                  class="text-gray-mid dark:text-gray-400 line-through text-lg"
+                  >399.000đ</span
+                >
+              </div>
+              <div
+                class="text-6xl sm:text-7xl font-extrabold text-gradient-pink mb-4"
+                id="product-price"
+              >
+                249K
+              </div>
             </div>
+
+            <div class="space-y-3 text-left mb-8">
+              <div class="flex items-center gap-3">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span class="font-medium">Live session 2 tiếng thực hành</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span class="font-medium"
+                  >Recording xem lại không giới hạn</span
+                >
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span class="font-medium">Prompt templates & resources</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="check-circle">
+                  <svg
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span class="font-medium">Q&A trực tiếp với trainer</span>
+              </div>
+            </div>
+
+            <!-- Checkout Form -->
+            <div
+              id="checkout-error"
+              class="hidden bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl p-4 mb-4 text-sm"
+            ></div>
+            <div
+              id="checkout-success"
+              class="hidden bg-green-500/10 border border-green-500/30 text-green-400 rounded-xl p-4 mb-4 text-sm"
+            ></div>
+
+            <form id="checkout-form" class="space-y-4">
+              <!-- Quantity -->
+              <div class="form-group">
+                <label
+                  class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400"
+                  >Số lượng vé</label
+                >
+                <div class="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onclick="changeQuantity(-1)"
+                    class="w-10 h-10 rounded-lg bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt flex items-center justify-center text-xl font-bold hover:border-brand-pink transition-colors"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    id="quantity"
+                    value="1"
+                    min="1"
+                    readonly
+                    class="w-16 h-10 text-center bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt rounded-lg font-semibold"
+                  />
+                  <button
+                    type="button"
+                    onclick="changeQuantity(1)"
+                    class="w-10 h-10 rounded-lg bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt flex items-center justify-center text-xl font-bold hover:border-brand-pink transition-colors"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <!-- Full Name -->
+              <div class="form-group">
+                <label
+                  for="customer_name"
+                  class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400"
+                  >Họ tên *</label
+                >
+                <input
+                  type="text"
+                  id="customer_name"
+                  required
+                  placeholder="Nguyễn Văn A"
+                  class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors placeholder:text-gray-mid/50"
+                />
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <label
+                  for="customer_email"
+                  class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400"
+                  >Email *</label
+                >
+                <input
+                  type="email"
+                  id="customer_email"
+                  required
+                  placeholder="email@example.com"
+                  class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors placeholder:text-gray-mid/50"
+                />
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group">
+                <label
+                  for="customer_phone"
+                  class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400"
+                  >Số điện thoại *</label
+                >
+                <input
+                  type="tel"
+                  id="customer_phone"
+                  required
+                  placeholder="0901234567"
+                  class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors placeholder:text-gray-mid/50"
+                />
+              </div>
+
+              <!-- Coupon -->
+              <div class="form-group">
+                <label
+                  class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400"
+                  >Mã giảm giá</label
+                >
+                <div class="flex gap-2">
+                  <input
+                    type="text"
+                    id="coupon_code"
+                    placeholder="Nhập mã coupon"
+                    class="flex-1 px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors placeholder:text-gray-mid/50"
+                  />
+                  <button
+                    type="button"
+                    onclick="applyCoupon()"
+                    class="px-4 py-3 rounded-xl bg-brand-yellow text-dark font-semibold hover:bg-brand-yellow/80 transition-colors"
+                  >
+                    Áp dụng
+                  </button>
+                </div>
+                <div
+                  id="applied-coupon"
+                  class="hidden mt-2 text-sm text-green-400 flex items-center gap-2"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span>Đã áp dụng: <strong id="coupon-name"></strong></span>
+                </div>
+              </div>
+
+              <!-- Payment Method -->
+              <div class="form-group">
+                <label
+                  for="payment_method"
+                  class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400"
+                  >Phương thức thanh toán</label
+                >
+                <select
+                  id="payment_method"
+                  class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors"
+                >
+                  <option value="bacs">Chuyển khoản ngân hàng</option>
+                  <option value="cod">Thanh toán khi nhận hàng</option>
+                </select>
+              </div>
+
+              <!-- Total -->
+              <div
+                class="bg-light dark:bg-dark-alt rounded-xl p-4 flex justify-between items-center"
+              >
+                <span class="font-medium">Tổng thanh toán:</span>
+                <span
+                  class="text-2xl font-bold text-gradient-pink"
+                  id="total-price"
+                  >249.000₫</span
+                >
+              </div>
+
+              <!-- Submit -->
+              <button
+                type="submit"
+                id="submit-btn"
+                class="btn-pink w-full py-4 text-lg font-semibold flex items-center justify-center gap-2"
+              >
+                <span>Đăng ký ngay</span>
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </button>
+            </form>
+          </div>
         </div>
+      </div>
     </section>
-    
+
     <!-- Checkout Integration Script -->
     <script>
-        // VT WooCommerce External Checkout Configuration
-        const CHECKOUT_CONFIG = {
-            API_URL: 'https://arealisticdreamer.com/wp-json/vt-woocommerce/v1',
-            PRODUCT_ID: 3858,
-            VARIATION_ID: 0,
-            API_KEY: "vt_fb8207bf86b62c76cc38a226ef0a91fc",
-            VIETQR: {
-              BANK_ID: "cake",
-              ACCOUNT_NUMBER: "0907772365",
-              ACCOUNT_NAME: "BUI NGUYEN QUOC TOAN",
-              API_URL: "https://vietqr.co/api/generate",
-            },
-            // WooCommerce site URL
-            SITE_URL: "https://arealisticdreamer.com",
-        };
-        
-        let currentPrice = 0;
-        let currentTotal = 0;
-        let appliedCoupons = [];
-        
-        // Initialize checkout on DOM ready
-        document.addEventListener('DOMContentLoaded', function() {
-            loadProduct();
-            setupCheckoutListeners();
-        });
-        
-        function setupCheckoutListeners() {
-            document.getElementById('checkout-form').addEventListener('submit', handleCheckoutSubmit);
-            document.getElementById('quantity').addEventListener('change', updatePrice);
-            document.getElementById('customer_email').addEventListener('blur', updatePrice);
-        }
-        
-        async function loadProduct() {
-            try {
-                const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/calculate-price`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-VT-API-Key': CHECKOUT_CONFIG.API_KEY },
-                    body: JSON.stringify({
-                        product_id: CHECKOUT_CONFIG.PRODUCT_ID,
-                        variation_id: CHECKOUT_CONFIG.VARIATION_ID,
-                        quantity: 1,
-                        customer_email: ''
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
-                    currentPrice = data.data.price;
-                    currentTotal = currentPrice;
-                    document.getElementById('total-price').innerHTML = data.data.price_formatted;
-                    window.dispatchEvent(new CustomEvent('vt:product:loaded', {
-                        detail: { productId: CHECKOUT_CONFIG.PRODUCT_ID, price: currentPrice }
-                    }));
-                }
-            } catch (error) {
-                console.error('Failed to load product:', error);
-            }
-        }
-        
-        function changeQuantity(delta) {
-            const input = document.getElementById('quantity');
-            const newVal = Math.max(1, parseInt(input.value) + delta);
-            input.value = newVal;
-            updatePrice();
-        }
-        
-        async function updatePrice() {
-            const quantity = parseInt(document.getElementById('quantity').value);
-            const email = document.getElementById('customer_email').value;
-            
-            try {
-                const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/calculate-totals`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-VT-API-Key': CHECKOUT_CONFIG.API_KEY },
-                    body: JSON.stringify({
-                        product_id: CHECKOUT_CONFIG.PRODUCT_ID,
-                        variation_id: CHECKOUT_CONFIG.VARIATION_ID,
-                        quantity,
-                        customer_email: email,
-                        coupon_codes: appliedCoupons.join(',')
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
-                    currentTotal = data.data.total;
-                    document.getElementById('total-price').innerHTML = data.data.total_formatted;
-                    window.dispatchEvent(new CustomEvent('vt:price:updated', {
-                        detail: { quantity, total: currentTotal }
-                    }));
-                }
-            } catch (error) {
-                console.error('Failed to update price:', error);
-            }
-        }
-        
-        async function applyCoupon() {
-            const couponCode = document.getElementById('coupon_code').value.trim();
-            if (!couponCode) {
-                showCheckoutError('Vui lòng nhập mã coupon');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/validate-coupon`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-VT-API-Key': CHECKOUT_CONFIG.API_KEY  },
-                    body: JSON.stringify({
-                        coupon_code: couponCode,
-                        product_id: CHECKOUT_CONFIG.PRODUCT_ID,
-                        customer_email: document.getElementById('customer_email').value
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
-                    appliedCoupons.push(couponCode);
-                    document.getElementById('coupon-name').textContent = couponCode;
-                    document.getElementById('applied-coupon').classList.remove('hidden');
-                    document.getElementById('coupon_code').value = '';
-                    showCheckoutSuccess('Áp dụng mã giảm giá thành công!');
-                    updatePrice();
-                    
-                    window.dispatchEvent(new CustomEvent('vt:coupon:applied', {
-                        detail: { couponCode }
-                    }));
-                } else {
-                    showCheckoutError(data.message || 'Mã coupon không hợp lệ');
-                }
-            } catch (error) {
-                showCheckoutError('Lỗi kết nối: ' + error.message);
-            }
-        }
-        
-        async function handleCheckoutSubmit(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submit-btn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Đang xử lý...';
-            
-            const formData = {
+      // VT WooCommerce External Checkout Configuration
+      const CHECKOUT_CONFIG = {
+        API_URL: "https://arealisticdreamer.com/wp-json/vt-woocommerce/v1",
+        PRODUCT_ID: 3858,
+        VARIATION_ID: 0,
+        API_KEY: "vt_fb8207bf86b62c76cc38a226ef0a91fc",
+        VIETQR: {
+          BANK_ID: "cake",
+          ACCOUNT_NUMBER: "0907772365",
+          ACCOUNT_NAME: "BUI NGUYEN QUOC TOAN",
+          API_URL: "https://vietqr.co/api/generate",
+        },
+        // WooCommerce site URL
+        SITE_URL: "https://arealisticdreamer.com",
+      };
+
+      let currentPrice = 0;
+      let currentTotal = 0;
+      let appliedCoupons = [];
+
+      // Initialize checkout on DOM ready
+      document.addEventListener("DOMContentLoaded", function () {
+        loadProduct();
+        setupCheckoutListeners();
+      });
+
+      function setupCheckoutListeners() {
+        document
+          .getElementById("checkout-form")
+          .addEventListener("submit", handleCheckoutSubmit);
+        document
+          .getElementById("quantity")
+          .addEventListener("change", updatePrice);
+        document
+          .getElementById("customer_email")
+          .addEventListener("blur", updatePrice);
+      }
+
+      async function loadProduct() {
+        try {
+          const response = await fetch(
+            `${CHECKOUT_CONFIG.API_URL}/calculate-price`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-VT-API-Key": CHECKOUT_CONFIG.API_KEY,
+              },
+              body: JSON.stringify({
                 product_id: CHECKOUT_CONFIG.PRODUCT_ID,
                 variation_id: CHECKOUT_CONFIG.VARIATION_ID,
-                quantity: parseInt(document.getElementById('quantity').value),
-                customer_name: document.getElementById('customer_name').value,
-                customer_email: document.getElementById('customer_email').value,
-                customer_phone: document.getElementById('customer_phone').value,
-                coupon_codes: appliedCoupons.join(','),
-                payment_method: document.getElementById('payment_method').value
-            };
-            
-            window.dispatchEvent(new CustomEvent('vt:order:submitting', { detail: { formData } }));
-            
-            try {
-                const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/checkout`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-VT-API-Key': CHECKOUT_CONFIG.API_KEY  },
-                    body: JSON.stringify(formData)
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.success) {
-                    showCheckoutSuccess('Đăng ký thành công! Đang chuyển trang thanh toán...');
-                    
-                    window.dispatchEvent(new CustomEvent('vt:order:success', {
-                        detail: { orderId: data.data.order_id, redirectUrl: data.data.redirect }
-                    }));
-                    
-                    setTimeout(() => {
-                        window.location.href = data.data.redirect;
-                    }, 1500);
-                } else {
-                    showCheckoutError(data.message || 'Đăng ký thất bại. Vui lòng thử lại.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                }
-            } catch (error) {
-                showCheckoutError('Lỗi kết nối: ' + error.message);
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+                quantity: 1,
+                customer_email: "",
+              }),
             }
+          );
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            currentPrice = data.data.price;
+            currentTotal = currentPrice;
+            document.getElementById("total-price").innerHTML =
+              data.data.price_formatted;
+            window.dispatchEvent(
+              new CustomEvent("vt:product:loaded", {
+                detail: {
+                  productId: CHECKOUT_CONFIG.PRODUCT_ID,
+                  price: currentPrice,
+                },
+              })
+            );
+          }
+        } catch (error) {
+          console.error("Failed to load product:", error);
         }
-        
-        function showCheckoutError(message) {
-            const errorDiv = document.getElementById('checkout-error');
-            errorDiv.textContent = message;
-            errorDiv.classList.remove('hidden');
-            document.getElementById('checkout-success').classList.add('hidden');
-            setTimeout(() => errorDiv.classList.add('hidden'), 5000);
+      }
+
+      function changeQuantity(delta) {
+        const input = document.getElementById("quantity");
+        const newVal = Math.max(1, parseInt(input.value) + delta);
+        input.value = newVal;
+        updatePrice();
+      }
+
+      async function updatePrice() {
+        const quantity = parseInt(document.getElementById("quantity").value);
+        const email = document.getElementById("customer_email").value;
+
+        try {
+          const response = await fetch(
+            `${CHECKOUT_CONFIG.API_URL}/calculate-totals`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-VT-API-Key": CHECKOUT_CONFIG.API_KEY,
+              },
+              body: JSON.stringify({
+                product_id: CHECKOUT_CONFIG.PRODUCT_ID,
+                variation_id: CHECKOUT_CONFIG.VARIATION_ID,
+                quantity,
+                customer_email: email,
+                coupon_codes: appliedCoupons.join(","),
+              }),
+            }
+          );
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            currentTotal = data.data.total;
+            document.getElementById("total-price").innerHTML =
+              data.data.total_formatted;
+            window.dispatchEvent(
+              new CustomEvent("vt:price:updated", {
+                detail: { quantity, total: currentTotal },
+              })
+            );
+          }
+        } catch (error) {
+          console.error("Failed to update price:", error);
         }
-        
-        function showCheckoutSuccess(message) {
-            const successDiv = document.getElementById('checkout-success');
-            successDiv.textContent = message;
-            successDiv.classList.remove('hidden');
-            document.getElementById('checkout-error').classList.add('hidden');
-            setTimeout(() => successDiv.classList.add('hidden'), 5000);
+      }
+
+      async function applyCoupon() {
+        const couponCode = document.getElementById("coupon_code").value.trim();
+        if (!couponCode) {
+          showCheckoutError("Vui lòng nhập mã coupon");
+          return;
         }
+
+        try {
+          const response = await fetch(
+            `${CHECKOUT_CONFIG.API_URL}/validate-coupon`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-VT-API-Key": CHECKOUT_CONFIG.API_KEY,
+              },
+              body: JSON.stringify({
+                coupon_code: couponCode,
+                product_id: CHECKOUT_CONFIG.PRODUCT_ID,
+                customer_email: document.getElementById("customer_email").value,
+              }),
+            }
+          );
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            appliedCoupons.push(couponCode);
+            document.getElementById("coupon-name").textContent = couponCode;
+            document
+              .getElementById("applied-coupon")
+              .classList.remove("hidden");
+            document.getElementById("coupon_code").value = "";
+            showCheckoutSuccess("Áp dụng mã giảm giá thành công!");
+            updatePrice();
+
+            window.dispatchEvent(
+              new CustomEvent("vt:coupon:applied", {
+                detail: { couponCode },
+              })
+            );
+          } else {
+            showCheckoutError(data.message || "Mã coupon không hợp lệ");
+          }
+        } catch (error) {
+          showCheckoutError("Lỗi kết nối: " + error.message);
+        }
+      }
+
+      async function handleCheckoutSubmit(e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById("submit-btn");
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Đang xử lý...';
+
+        const formData = {
+          product_id: CHECKOUT_CONFIG.PRODUCT_ID,
+          variation_id: CHECKOUT_CONFIG.VARIATION_ID,
+          quantity: parseInt(document.getElementById("quantity").value),
+          customer_name: document.getElementById("customer_name").value,
+          customer_email: document.getElementById("customer_email").value,
+          customer_phone: document.getElementById("customer_phone").value,
+          coupon_codes: appliedCoupons.join(","),
+          payment_method: document.getElementById("payment_method").value,
+        };
+
+        window.dispatchEvent(
+          new CustomEvent("vt:order:submitting", { detail: { formData } })
+        );
+
+        try {
+          const response = await fetch(`${CHECKOUT_CONFIG.API_URL}/checkout`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-VT-API-Key": CHECKOUT_CONFIG.API_KEY,
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            showCheckoutSuccess(
+              "Đăng ký thành công! Vui lòng quét mã QR để thanh toán."
+            );
+
+            window.dispatchEvent(
+              new CustomEvent("vt:order:success", {
+                detail: {
+                  orderId: data.data.order_id,
+                  redirectUrl: data.data.redirect,
+                  orderData: data.data,
+                },
+              })
+            );
+
+            // Show QR code payment section instead of redirecting
+            displayQRPayment(data.data.order_id, currentTotal);
+          } else {
+            showCheckoutError(
+              data.message || "Đăng ký thất bại. Vui lòng thử lại."
+            );
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+          }
+        } catch (error) {
+          showCheckoutError("Lỗi kết nối: " + error.message);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+      }
+
+      function showCheckoutError(message) {
+        const errorDiv = document.getElementById("checkout-error");
+        errorDiv.textContent = message;
+        errorDiv.classList.remove("hidden");
+        document.getElementById("checkout-success").classList.add("hidden");
+        setTimeout(() => errorDiv.classList.add("hidden"), 5000);
+      }
+
+      function showCheckoutSuccess(message) {
+        const successDiv = document.getElementById("checkout-success");
+        successDiv.textContent = message;
+        successDiv.classList.remove("hidden");
+        document.getElementById("checkout-error").classList.add("hidden");
+      }
+
+      function displayQRPayment(orderId, amount) {
+        // Hide the checkout form
+        document.getElementById("checkout-form").style.display = "none";
+
+        // Generate VietQR URL
+        const qrUrl = `${CHECKOUT_CONFIG.VIETQR.API_URL}/${CHECKOUT_CONFIG.VIETQR.BANK_ID}/${CHECKOUT_CONFIG.VIETQR.ACCOUNT_NUMBER}/${amount}?accountName=${encodeURIComponent(CHECKOUT_CONFIG.VIETQR.ACCOUNT_NAME)}&addInfo=DH${orderId}`;
+
+        // Create payment section
+        const paymentSection = document.createElement("div");
+        paymentSection.id = "qr-payment-section";
+        paymentSection.className = "max-w-md mx-auto text-center space-y-6 p-8 bg-white rounded-2xl shadow-xl";
+        paymentSection.innerHTML = `
+          <div class="space-y-4">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900">Đơn hàng #${orderId}</h3>
+            <p class="text-3xl font-extrabold text-pink-600">${formatPrice(amount)}</p>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border-4 border-gray-200">
+            <img src="${qrUrl}" alt="QR Code" class="w-full max-w-xs mx-auto" />
+          </div>
+
+          <div class="space-y-2 text-left bg-gray-50 p-4 rounded-lg">
+            <p class="text-sm text-gray-600">
+              <span class="font-semibold">Ngân hàng:</span> ${CHECKOUT_CONFIG.VIETQR.BANK_ID.toUpperCase()}
+            </p>
+            <p class="text-sm text-gray-600">
+              <span class="font-semibold">Số tài khoản:</span> ${CHECKOUT_CONFIG.VIETQR.ACCOUNT_NUMBER}
+            </p>
+            <p class="text-sm text-gray-600">
+              <span class="font-semibold">Chủ tài khoản:</span> ${CHECKOUT_CONFIG.VIETQR.ACCOUNT_NAME}
+            </p>
+            <p class="text-sm text-gray-600">
+              <span class="font-semibold">Nội dung:</span> <span class="font-mono bg-yellow-100 px-2 py-1 rounded">DH${orderId}</span>
+            </p>
+          </div>
+
+          <div class="text-sm text-gray-500 bg-blue-50 p-4 rounded-lg">
+            ⚠️ Vui lòng chuyển khoản đúng nội dung để đơn hàng được xử lý tự động
+          </div>
+
+          <button onclick="location.reload()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors">
+            Đăng ký đơn hàng mới
+          </button>
+        `;
+
+        // Insert payment section after pricing section
+        const pricingSection = document.getElementById("pricing");
+        pricingSection.appendChild(paymentSection);
+
+        // Scroll to payment section
+        paymentSection.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      function formatPrice(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+          style: 'currency',
+          currency: 'VND'
+        }).format(amount);
+      }
     </script>
 
     <!-- Final CTA -->
     <section class="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div class="deco-circle w-64 h-64 bg-brand-pink top-0 right-0 absolute"></div>
-        <div class="deco-circle w-48 h-48 bg-brand-yellow bottom-0 left-0 absolute"></div>
-        
-        <div class="max-w-3xl mx-auto text-center relative fade-up">
-            <span class="badge-pink px-4 py-2 text-sm inline-block mb-4">10/12/2025 • 19:30</span>
-            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-8">
-                Bạn sẽ có<br><span class="text-gradient-pink">portfolio mới</span>
-            </h2>
-            <a href="#pricing" class="btn-pink px-12 py-5 text-xl cursor-pointer inline-flex items-center gap-3">
-                Đăng ký Workshop — 249K
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-            </a>
-        </div>
+      <div
+        class="deco-circle w-64 h-64 bg-brand-pink top-0 right-0 absolute"
+      ></div>
+      <div
+        class="deco-circle w-48 h-48 bg-brand-yellow bottom-0 left-0 absolute"
+      ></div>
+
+      <div class="max-w-3xl mx-auto text-center relative fade-up">
+        <span class="badge-pink px-4 py-2 text-sm inline-block mb-4"
+          >10/12/2025 • 19:30</span
+        >
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-8">
+          Bạn sẽ có<br /><span class="text-gradient-pink">portfolio mới</span>
+        </h2>
+        <a
+          href="#pricing"
+          class="btn-pink px-12 py-5 text-xl cursor-pointer inline-flex items-center gap-3"
+        >
+          Đăng ký Workshop — 249K
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 8l4 4m0 0l-4 4m4-4H3"
+            />
+          </svg>
+        </a>
+      </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-8 px-4 sm:px-6 lg:px-8 border-t border-gray-border dark:border-dark-alt transition-colors">
-        <div class="max-w-6xl mx-auto text-center text-gray-mid dark:text-gray-400 text-sm">
-            © 2025 AI Workshop by Tony. All rights reserved.
-        </div>
+    <footer
+      class="py-8 px-4 sm:px-6 lg:px-8 border-t border-gray-border dark:border-dark-alt transition-colors"
+    >
+      <div
+        class="max-w-6xl mx-auto text-center text-gray-mid dark:text-gray-400 text-sm"
+      >
+        © 2025 AI Workshop by Tony. All rights reserved.
+      </div>
     </footer>
 
     <!-- Mobile Sticky CTA -->
-    <div class="fixed bottom-0 left-0 right-0 p-3 bg-white/95 dark:bg-[#0D0D0D]/95 backdrop-blur-md border-t border-gray-border dark:border-dark-alt sm:hidden z-50 transition-colors">
-        <a href="#pricing" class="btn-pink w-full py-3 cursor-pointer block text-center font-semibold">
-            Đăng ký — 249K
-        </a>
+    <div
+      class="fixed bottom-0 left-0 right-0 p-3 bg-white/95 dark:bg-[#0D0D0D]/95 backdrop-blur-md border-t border-gray-border dark:border-dark-alt sm:hidden z-50 transition-colors"
+    >
+      <a
+        href="#pricing"
+        class="btn-pink w-full py-3 cursor-pointer block text-center font-semibold"
+      >
+        Đăng ký — 249K
+      </a>
     </div>
 
     <script>
-        // Dark mode toggle
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.theme = 'light';
-            } else {
-                html.classList.add('dark');
-                localStorage.theme = 'dark';
-            }
+      // Dark mode toggle
+      function toggleDarkMode() {
+        const html = document.documentElement;
+        if (html.classList.contains("dark")) {
+          html.classList.remove("dark");
+          localStorage.theme = "light";
+        } else {
+          html.classList.add("dark");
+          localStorage.theme = "dark";
         }
-        
-        // Typing effect
-        const typingPhrases = [
-            { text: 'Figma → ', highlight: 'Live Demo' },
-            { text: 'Xây dựng ', highlight: 'Portfolio' }
-        ];
-        
-        let phraseIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        let isPaused = false;
-        let isVisible = false; // Will be set by observer
-        let typingTimeout = null;
-        const typingSpeed = 80;
-        const deletingSpeed = 50;
-        const pauseDuration = 2500;
-        
-        function typeEffect() {
-            // Stop if not visible
-            if (!isVisible) {
-                return;
-            }
-            
-            const typingElement = document.getElementById('typing-text');
-            if (!typingElement) return;
-            
-            const currentPhrase = typingPhrases[phraseIndex];
-            const fullText = currentPhrase.text + currentPhrase.highlight;
-            
-            if (isPaused) {
-                typingTimeout = setTimeout(typeEffect, pauseDuration);
-                isPaused = false;
-                isDeleting = true;
-                return;
-            }
-            
-            // Render text with highlight
-            const displayText = fullText.substring(0, charIndex);
-            const normalLength = currentPhrase.text.length;
-            
-            if (charIndex <= normalLength) {
-                typingElement.innerHTML = displayText;
-            } else {
-                const normalPart = currentPhrase.text;
-                const highlightPart = displayText.substring(normalLength);
-                typingElement.innerHTML = `${normalPart}<span class="typing-highlight">${highlightPart}</span>`;
-            }
-            
-            if (isDeleting) {
-                // Deleting
-                charIndex--;
-                
-                if (charIndex < 0) {
-                    isDeleting = false;
-                    phraseIndex = (phraseIndex + 1) % typingPhrases.length;
-                    charIndex = 0;
-                    typingTimeout = setTimeout(typeEffect, 500);
-                    return;
+      }
+
+      // Typing effect
+      const typingPhrases = [
+        { text: "Figma → ", highlight: "Live Demo" },
+        { text: "Xây dựng ", highlight: "Portfolio" },
+      ];
+
+      let phraseIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      let isPaused = false;
+      let isVisible = false; // Will be set by observer
+      let typingTimeout = null;
+      const typingSpeed = 80;
+      const deletingSpeed = 50;
+      const pauseDuration = 2500;
+
+      function typeEffect() {
+        // Stop if not visible
+        if (!isVisible) {
+          return;
+        }
+
+        const typingElement = document.getElementById("typing-text");
+        if (!typingElement) return;
+
+        const currentPhrase = typingPhrases[phraseIndex];
+        const fullText = currentPhrase.text + currentPhrase.highlight;
+
+        if (isPaused) {
+          typingTimeout = setTimeout(typeEffect, pauseDuration);
+          isPaused = false;
+          isDeleting = true;
+          return;
+        }
+
+        // Render text with highlight
+        const displayText = fullText.substring(0, charIndex);
+        const normalLength = currentPhrase.text.length;
+
+        if (charIndex <= normalLength) {
+          typingElement.innerHTML = displayText;
+        } else {
+          const normalPart = currentPhrase.text;
+          const highlightPart = displayText.substring(normalLength);
+          typingElement.innerHTML = `${normalPart}<span class="typing-highlight">${highlightPart}</span>`;
+        }
+
+        if (isDeleting) {
+          // Deleting
+          charIndex--;
+
+          if (charIndex < 0) {
+            isDeleting = false;
+            phraseIndex = (phraseIndex + 1) % typingPhrases.length;
+            charIndex = 0;
+            typingTimeout = setTimeout(typeEffect, 500);
+            return;
+          }
+        } else {
+          // Typing
+          charIndex++;
+
+          if (charIndex > fullText.length) {
+            isPaused = true;
+            typingTimeout = setTimeout(typeEffect, 100);
+            return;
+          }
+        }
+
+        const speed = isDeleting ? deletingSpeed : typingSpeed;
+        typingTimeout = setTimeout(typeEffect, speed);
+      }
+
+      // Observe typing container visibility
+      function setupTypingObserver() {
+        const typingContainer = document.querySelector(".typing-container");
+        if (!typingContainer) return;
+
+        const typingObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                // Resume typing when visible
+                typingContainer.classList.remove("paused");
+                if (!isVisible) {
+                  isVisible = true;
+                  typeEffect();
                 }
-            } else {
-                // Typing
-                charIndex++;
-                
-                if (charIndex > fullText.length) {
-                    isPaused = true;
-                    typingTimeout = setTimeout(typeEffect, 100);
-                    return;
+              } else {
+                // Pause typing when off screen
+                isVisible = false;
+                typingContainer.classList.add("paused");
+                if (typingTimeout) {
+                  clearTimeout(typingTimeout);
+                  typingTimeout = null;
                 }
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        typingObserver.observe(typingContainer);
+      }
+
+      // Start typing effect on load
+      document.addEventListener("DOMContentLoaded", () => {
+        setupTypingObserver();
+        // Initial start with small delay - observer will handle visibility
+        isVisible = true;
+        setTimeout(typeEffect, 800);
+      });
+
+      // Tab switching
+      function switchTab(index) {
+        document
+          .querySelectorAll(".tab-telos")
+          .forEach((btn) => btn.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((content) => content.classList.add("hidden"));
+        document.querySelector(`[data-tab="${index}"]`).classList.add("active");
+        document
+          .querySelector(`[data-content="${index}"]`)
+          .classList.remove("hidden");
+      }
+
+      // Scroll reveal
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
             }
-            
-            const speed = isDeleting ? deletingSpeed : typingSpeed;
-            typingTimeout = setTimeout(typeEffect, speed);
-        }
-        
-        // Observe typing container visibility
-        function setupTypingObserver() {
-            const typingContainer = document.querySelector('.typing-container');
-            if (!typingContainer) return;
-            
-            const typingObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Resume typing when visible
-                        typingContainer.classList.remove('paused');
-                        if (!isVisible) {
-                            isVisible = true;
-                            typeEffect();
-                        }
-                    } else {
-                        // Pause typing when off screen
-                        isVisible = false;
-                        typingContainer.classList.add('paused');
-                        if (typingTimeout) {
-                            clearTimeout(typingTimeout);
-                            typingTimeout = null;
-                        }
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            typingObserver.observe(typingContainer);
-        }
-        
-        // Start typing effect on load
-        document.addEventListener('DOMContentLoaded', () => {
-            setupTypingObserver();
-            // Initial start with small delay - observer will handle visibility
-            isVisible = true;
-            setTimeout(typeEffect, 800);
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document
+        .querySelectorAll(".fade-up")
+        .forEach((el) => observer.observe(el));
+
+      // Three.js Animation - Floating Design Elements
+      let threeScene, threeCamera, threeRenderer;
+      let floatingShapes = [];
+      let connectionLines = [];
+      let particles = [];
+      let threeAnimationId = null;
+      let isThreeVisible = true;
+
+      function initThreeJS() {
+        const canvas = document.getElementById("hero-canvas");
+        if (!canvas) return;
+
+        const container = canvas.parentElement;
+        const width = container.offsetWidth;
+        const height = container.offsetHeight;
+
+        // Scene
+        threeScene = new THREE.Scene();
+
+        // Camera - pull back more for large screens
+        threeCamera = new THREE.PerspectiveCamera(
+          50,
+          width / height,
+          0.1,
+          1000
+        );
+        threeCamera.position.z = 50;
+
+        // Renderer
+        threeRenderer = new THREE.WebGLRenderer({
+          canvas: canvas,
+          alpha: true,
+          antialias: true,
         });
-        
-        // Tab switching
-        function switchTab(index) {
-            document.querySelectorAll('.tab-telos').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-            document.querySelector(`[data-tab="${index}"]`).classList.add('active');
-            document.querySelector(`[data-content="${index}"]`).classList.remove('hidden');
-        }
+        threeRenderer.setSize(width, height);
+        threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Scroll reveal
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-        
-        // Three.js Animation - Floating Design Elements
-        let threeScene, threeCamera, threeRenderer;
-        let floatingShapes = [];
-        let connectionLines = [];
-        let particles = [];
-        let threeAnimationId = null;
-        let isThreeVisible = true;
-        
-        function initThreeJS() {
-            const canvas = document.getElementById('hero-canvas');
-            if (!canvas) return;
-            
-            const container = canvas.parentElement;
-            const width = container.offsetWidth;
-            const height = container.offsetHeight;
-            
-            // Scene
-            threeScene = new THREE.Scene();
-            
-            // Camera - pull back more for large screens
-            threeCamera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-            threeCamera.position.z = 50;
-            
-            // Renderer
-            threeRenderer = new THREE.WebGLRenderer({ 
-                canvas: canvas,
-                alpha: true,
-                antialias: true
-            });
-            threeRenderer.setSize(width, height);
-            threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            
-            // Colors
-            const isDark = document.documentElement.classList.contains('dark');
-            const colors = {
-                pink: 0xEF4A81,
-                yellow: 0xFFC845,
-                indigo: 0x5D4FB8,
-                white: isDark ? 0xFFFFFF : 0x171717
-            };
-            
-            // Create floating shapes - representing design elements
-            const shapeGeometries = [
-                new THREE.BoxGeometry(2, 2, 2),
-                new THREE.SphereGeometry(1.2, 32, 32),
-                new THREE.TorusGeometry(1, 0.4, 16, 32),
-                new THREE.OctahedronGeometry(1.5),
-                new THREE.ConeGeometry(1, 2, 4),
-                new THREE.IcosahedronGeometry(1.3),
-            ];
-            
-            const shapeColors = [colors.pink, colors.yellow, colors.indigo, colors.pink, colors.yellow, colors.indigo];
-            
-            // Position shapes on LEFT and RIGHT edges, avoiding center content
-            const positions = [
-                // Left side shapes (x: -60 to -25)
-                { x: -55, y: 15, z: -10 },
-                { x: -45, y: -10, z: 5 },
-                { x: -35, y: 5, z: -5 },
-                { x: -50, y: -20, z: 0 },
-                { x: -30, y: 20, z: -15 },
-                { x: -40, y: -5, z: 10 },
-                { x: -55, y: 0, z: -20 },
-                // Right side shapes (x: 25 to 60)
-                { x: 45, y: 10, z: -5 },
-                { x: 55, y: -15, z: 0 },
-                { x: 35, y: -5, z: -10 },
-                { x: 50, y: 20, z: 5 },
-                { x: 40, y: -20, z: -15 },
-                // Bottom area shapes
-                { x: -20, y: -30, z: 0 },
-                { x: 0, y: -35, z: -10 },
-                { x: 20, y: -30, z: 5 },
-                { x: -10, y: -40, z: -5 },
-                { x: 10, y: -38, z: 0 },
-            ];
-            
-            for (let i = 0; i < positions.length; i++) {
-                const geoIndex = i % shapeGeometries.length;
-                const geometry = shapeGeometries[geoIndex];
-                
-                const material = new THREE.MeshBasicMaterial({
-                    color: shapeColors[geoIndex],
-                    wireframe: true,
-                    transparent: true,
-                    opacity: isDark ? 0.5 : 0.35
-                });
-                
-                const mesh = new THREE.Mesh(geometry, material);
-                
-                // Use predefined positions
-                mesh.position.x = positions[i].x;
-                mesh.position.y = positions[i].y;
-                mesh.position.z = positions[i].z;
-                
-                // Random scale variation
-                const scale = 0.8 + Math.random() * 0.6;
-                mesh.scale.setScalar(scale);
-                
-                // Random rotation
-                mesh.rotation.x = Math.random() * Math.PI;
-                mesh.rotation.y = Math.random() * Math.PI;
-                
-                // Store animation properties
-                mesh.userData = {
-                    rotationSpeed: {
-                        x: (Math.random() - 0.5) * 0.008,
-                        y: (Math.random() - 0.5) * 0.008,
-                        z: (Math.random() - 0.5) * 0.008
-                    },
-                    floatSpeed: 0.3 + Math.random() * 0.3,
-                    floatOffset: Math.random() * Math.PI * 2,
-                    originalY: mesh.position.y
-                };
-                
-                threeScene.add(mesh);
-                floatingShapes.push(mesh);
-            }
-            
-            // Create connection lines between nearby shapes (only on sides)
-            const lineMaterial = new THREE.LineBasicMaterial({
-                color: isDark ? 0xFFFFFF : 0x171717,
-                transparent: true,
-                opacity: 0.08
-            });
-            
-            for (let i = 0; i < floatingShapes.length; i++) {
-                for (let j = i + 1; j < floatingShapes.length; j++) {
-                    const distance = floatingShapes[i].position.distanceTo(floatingShapes[j].position);
-                    // Only connect shapes on same side (both x negative or both x positive)
-                    const sameSide = (floatingShapes[i].position.x < 0 && floatingShapes[j].position.x < 0) ||
-                                    (floatingShapes[i].position.x > 0 && floatingShapes[j].position.x > 0) ||
-                                    (floatingShapes[i].position.y < -25 && floatingShapes[j].position.y < -25);
-                    
-                    if (distance < 30 && sameSide) {
-                        const geometry = new THREE.BufferGeometry().setFromPoints([
-                            floatingShapes[i].position,
-                            floatingShapes[j].position
-                        ]);
-                        const line = new THREE.Line(geometry, lineMaterial);
-                        line.userData = { startIndex: i, endIndex: j };
-                        threeScene.add(line);
-                        connectionLines.push(line);
-                    }
-                }
-            }
-            
-            // Create particles - on edges only
-            const particleGeometry = new THREE.SphereGeometry(0.15, 8, 8);
-            
-            for (let i = 0; i < 40; i++) {
-                const particleMaterial = new THREE.MeshBasicMaterial({
-                    color: [colors.pink, colors.yellow, colors.indigo][i % 3],
-                    transparent: true,
-                    opacity: 0.7
-                });
-                
-                const particle = new THREE.Mesh(particleGeometry, particleMaterial);
-                
-                // Position particles on edges
-                const side = Math.random() > 0.5 ? 1 : -1;
-                const isBottom = Math.random() > 0.7;
-                
-                if (isBottom) {
-                    particle.position.set(
-                        (Math.random() - 0.5) * 60,
-                        -25 - Math.random() * 20,
-                        (Math.random() - 0.5) * 20
-                    );
-                } else {
-                    particle.position.set(
-                        side * (25 + Math.random() * 35),
-                        (Math.random() - 0.5) * 40,
-                        (Math.random() - 0.5) * 20
-                    );
-                }
-                
-                particle.userData = {
-                    velocity: new THREE.Vector3(
-                        (Math.random() - 0.5) * 0.05,
-                        (Math.random() - 0.5) * 0.05,
-                        (Math.random() - 0.5) * 0.03
-                    ),
-                    originalPos: particle.position.clone(),
-                    side: side,
-                    isBottom: isBottom
-                };
-                
-                threeScene.add(particle);
-                particles.push(particle);
-            }
-            
-            // Handle resize
-            window.addEventListener('resize', onThreeResize);
-            
-            // Start animation
-            animateThree();
-        }
-        
-        function onThreeResize() {
-            const canvas = document.getElementById('hero-canvas');
-            if (!canvas || !threeCamera || !threeRenderer) return;
-            
-            const container = canvas.parentElement;
-            const width = container.offsetWidth;
-            const height = container.offsetHeight;
-            
-            threeCamera.aspect = width / height;
-            threeCamera.updateProjectionMatrix();
-            threeRenderer.setSize(width, height);
-        }
-        
-        function animateThree() {
-            if (!isThreeVisible) {
-                threeAnimationId = null;
-                return;
-            }
-            
-            threeAnimationId = requestAnimationFrame(animateThree);
-            
-            const time = Date.now() * 0.001;
-            
-            // Animate floating shapes
-            floatingShapes.forEach((shape, i) => {
-                shape.rotation.x += shape.userData.rotationSpeed.x;
-                shape.rotation.y += shape.userData.rotationSpeed.y;
-                shape.rotation.z += shape.userData.rotationSpeed.z;
-                
-                // Gentle floating motion
-                shape.position.y = shape.userData.originalY + 
-                    Math.sin(time * shape.userData.floatSpeed + shape.userData.floatOffset) * 2;
-            });
-            
-            // Update connection lines
-            connectionLines.forEach(line => {
-                const positions = line.geometry.attributes.position;
-                const startShape = floatingShapes[line.userData.startIndex];
-                const endShape = floatingShapes[line.userData.endIndex];
-                
-                positions.setXYZ(0, startShape.position.x, startShape.position.y, startShape.position.z);
-                positions.setXYZ(1, endShape.position.x, endShape.position.y, endShape.position.z);
-                positions.needsUpdate = true;
-            });
-            
-            // Animate particles - keep them on their side
-            particles.forEach(particle => {
-                particle.position.add(particle.userData.velocity);
-                
-                // Boundary check - keep on edges
-                if (particle.userData.isBottom) {
-                    if (Math.abs(particle.position.x) > 35) particle.userData.velocity.x *= -1;
-                    if (particle.position.y < -45 || particle.position.y > -20) particle.userData.velocity.y *= -1;
-                } else {
-                    const minX = particle.userData.side > 0 ? 20 : -60;
-                    const maxX = particle.userData.side > 0 ? 60 : -20;
-                    if (particle.position.x < minX || particle.position.x > maxX) particle.userData.velocity.x *= -1;
-                    if (Math.abs(particle.position.y) > 25) particle.userData.velocity.y *= -1;
-                }
-                if (Math.abs(particle.position.z) > 15) particle.userData.velocity.z *= -1;
-                
-                // Pulse scale
-                const scale = 1 + Math.sin(time * 2 + particle.id) * 0.2;
-                particle.scale.setScalar(scale);
-            });
-            
-            // Very subtle camera movement
-            threeCamera.position.x = Math.sin(time * 0.08) * 1.5;
-            threeCamera.position.y = Math.cos(time * 0.1) * 1;
-            threeCamera.lookAt(0, -5, 0);
-            
-            threeRenderer.render(threeScene, threeCamera);
-        }
-        
-        // Observe hero section for Three.js performance
-        function setupThreeObserver() {
-            const heroSection = document.getElementById('hero-canvas');
-            if (!heroSection) return;
-            
-            const heroObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (!isThreeVisible) {
-                            isThreeVisible = true;
-                            if (!threeAnimationId) animateThree();
-                        }
-                    } else {
-                        isThreeVisible = false;
-                        if (threeAnimationId) {
-                            cancelAnimationFrame(threeAnimationId);
-                            threeAnimationId = null;
-                        }
-                    }
-                });
-            }, { threshold: 0.05 });
-            
-            heroObserver.observe(heroSection.parentElement);
-        }
-        
-        // Update Three.js colors on dark mode toggle
-        function updateThreeColors() {
-            if (!threeScene) return;
-            
-            const isDark = document.documentElement.classList.contains('dark');
-            
-            floatingShapes.forEach(shape => {
-                shape.material.opacity = isDark ? 0.6 : 0.4;
-            });
-            
-            connectionLines.forEach(line => {
-                line.material.color.setHex(isDark ? 0xFFFFFF : 0x171717);
-            });
-        }
-        
-        // Modify toggleDarkMode to update Three.js
-        const originalToggleDarkMode = toggleDarkMode;
-        toggleDarkMode = function() {
-            originalToggleDarkMode();
-            setTimeout(updateThreeColors, 50);
+        // Colors
+        const isDark = document.documentElement.classList.contains("dark");
+        const colors = {
+          pink: 0xef4a81,
+          yellow: 0xffc845,
+          indigo: 0x5d4fb8,
+          white: isDark ? 0xffffff : 0x171717,
         };
-        
-        // Initialize Three.js on load
-        document.addEventListener('DOMContentLoaded', () => {
-            initThreeJS();
-            setupThreeObserver();
+
+        // Create floating shapes - representing design elements
+        const shapeGeometries = [
+          new THREE.BoxGeometry(2, 2, 2),
+          new THREE.SphereGeometry(1.2, 32, 32),
+          new THREE.TorusGeometry(1, 0.4, 16, 32),
+          new THREE.OctahedronGeometry(1.5),
+          new THREE.ConeGeometry(1, 2, 4),
+          new THREE.IcosahedronGeometry(1.3),
+        ];
+
+        const shapeColors = [
+          colors.pink,
+          colors.yellow,
+          colors.indigo,
+          colors.pink,
+          colors.yellow,
+          colors.indigo,
+        ];
+
+        // Position shapes on LEFT and RIGHT edges, avoiding center content
+        const positions = [
+          // Left side shapes (x: -60 to -25)
+          { x: -55, y: 15, z: -10 },
+          { x: -45, y: -10, z: 5 },
+          { x: -35, y: 5, z: -5 },
+          { x: -50, y: -20, z: 0 },
+          { x: -30, y: 20, z: -15 },
+          { x: -40, y: -5, z: 10 },
+          { x: -55, y: 0, z: -20 },
+          // Right side shapes (x: 25 to 60)
+          { x: 45, y: 10, z: -5 },
+          { x: 55, y: -15, z: 0 },
+          { x: 35, y: -5, z: -10 },
+          { x: 50, y: 20, z: 5 },
+          { x: 40, y: -20, z: -15 },
+          // Bottom area shapes
+          { x: -20, y: -30, z: 0 },
+          { x: 0, y: -35, z: -10 },
+          { x: 20, y: -30, z: 5 },
+          { x: -10, y: -40, z: -5 },
+          { x: 10, y: -38, z: 0 },
+        ];
+
+        for (let i = 0; i < positions.length; i++) {
+          const geoIndex = i % shapeGeometries.length;
+          const geometry = shapeGeometries[geoIndex];
+
+          const material = new THREE.MeshBasicMaterial({
+            color: shapeColors[geoIndex],
+            wireframe: true,
+            transparent: true,
+            opacity: isDark ? 0.5 : 0.35,
+          });
+
+          const mesh = new THREE.Mesh(geometry, material);
+
+          // Use predefined positions
+          mesh.position.x = positions[i].x;
+          mesh.position.y = positions[i].y;
+          mesh.position.z = positions[i].z;
+
+          // Random scale variation
+          const scale = 0.8 + Math.random() * 0.6;
+          mesh.scale.setScalar(scale);
+
+          // Random rotation
+          mesh.rotation.x = Math.random() * Math.PI;
+          mesh.rotation.y = Math.random() * Math.PI;
+
+          // Store animation properties
+          mesh.userData = {
+            rotationSpeed: {
+              x: (Math.random() - 0.5) * 0.008,
+              y: (Math.random() - 0.5) * 0.008,
+              z: (Math.random() - 0.5) * 0.008,
+            },
+            floatSpeed: 0.3 + Math.random() * 0.3,
+            floatOffset: Math.random() * Math.PI * 2,
+            originalY: mesh.position.y,
+          };
+
+          threeScene.add(mesh);
+          floatingShapes.push(mesh);
+        }
+
+        // Create connection lines between nearby shapes (only on sides)
+        const lineMaterial = new THREE.LineBasicMaterial({
+          color: isDark ? 0xffffff : 0x171717,
+          transparent: true,
+          opacity: 0.08,
         });
+
+        for (let i = 0; i < floatingShapes.length; i++) {
+          for (let j = i + 1; j < floatingShapes.length; j++) {
+            const distance = floatingShapes[i].position.distanceTo(
+              floatingShapes[j].position
+            );
+            // Only connect shapes on same side (both x negative or both x positive)
+            const sameSide =
+              (floatingShapes[i].position.x < 0 &&
+                floatingShapes[j].position.x < 0) ||
+              (floatingShapes[i].position.x > 0 &&
+                floatingShapes[j].position.x > 0) ||
+              (floatingShapes[i].position.y < -25 &&
+                floatingShapes[j].position.y < -25);
+
+            if (distance < 30 && sameSide) {
+              const geometry = new THREE.BufferGeometry().setFromPoints([
+                floatingShapes[i].position,
+                floatingShapes[j].position,
+              ]);
+              const line = new THREE.Line(geometry, lineMaterial);
+              line.userData = { startIndex: i, endIndex: j };
+              threeScene.add(line);
+              connectionLines.push(line);
+            }
+          }
+        }
+
+        // Create particles - on edges only
+        const particleGeometry = new THREE.SphereGeometry(0.15, 8, 8);
+
+        for (let i = 0; i < 40; i++) {
+          const particleMaterial = new THREE.MeshBasicMaterial({
+            color: [colors.pink, colors.yellow, colors.indigo][i % 3],
+            transparent: true,
+            opacity: 0.7,
+          });
+
+          const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+
+          // Position particles on edges
+          const side = Math.random() > 0.5 ? 1 : -1;
+          const isBottom = Math.random() > 0.7;
+
+          if (isBottom) {
+            particle.position.set(
+              (Math.random() - 0.5) * 60,
+              -25 - Math.random() * 20,
+              (Math.random() - 0.5) * 20
+            );
+          } else {
+            particle.position.set(
+              side * (25 + Math.random() * 35),
+              (Math.random() - 0.5) * 40,
+              (Math.random() - 0.5) * 20
+            );
+          }
+
+          particle.userData = {
+            velocity: new THREE.Vector3(
+              (Math.random() - 0.5) * 0.05,
+              (Math.random() - 0.5) * 0.05,
+              (Math.random() - 0.5) * 0.03
+            ),
+            originalPos: particle.position.clone(),
+            side: side,
+            isBottom: isBottom,
+          };
+
+          threeScene.add(particle);
+          particles.push(particle);
+        }
+
+        // Handle resize
+        window.addEventListener("resize", onThreeResize);
+
+        // Start animation
+        animateThree();
+      }
+
+      function onThreeResize() {
+        const canvas = document.getElementById("hero-canvas");
+        if (!canvas || !threeCamera || !threeRenderer) return;
+
+        const container = canvas.parentElement;
+        const width = container.offsetWidth;
+        const height = container.offsetHeight;
+
+        threeCamera.aspect = width / height;
+        threeCamera.updateProjectionMatrix();
+        threeRenderer.setSize(width, height);
+      }
+
+      function animateThree() {
+        if (!isThreeVisible) {
+          threeAnimationId = null;
+          return;
+        }
+
+        threeAnimationId = requestAnimationFrame(animateThree);
+
+        const time = Date.now() * 0.001;
+
+        // Animate floating shapes
+        floatingShapes.forEach((shape, i) => {
+          shape.rotation.x += shape.userData.rotationSpeed.x;
+          shape.rotation.y += shape.userData.rotationSpeed.y;
+          shape.rotation.z += shape.userData.rotationSpeed.z;
+
+          // Gentle floating motion
+          shape.position.y =
+            shape.userData.originalY +
+            Math.sin(
+              time * shape.userData.floatSpeed + shape.userData.floatOffset
+            ) *
+              2;
+        });
+
+        // Update connection lines
+        connectionLines.forEach((line) => {
+          const positions = line.geometry.attributes.position;
+          const startShape = floatingShapes[line.userData.startIndex];
+          const endShape = floatingShapes[line.userData.endIndex];
+
+          positions.setXYZ(
+            0,
+            startShape.position.x,
+            startShape.position.y,
+            startShape.position.z
+          );
+          positions.setXYZ(
+            1,
+            endShape.position.x,
+            endShape.position.y,
+            endShape.position.z
+          );
+          positions.needsUpdate = true;
+        });
+
+        // Animate particles - keep them on their side
+        particles.forEach((particle) => {
+          particle.position.add(particle.userData.velocity);
+
+          // Boundary check - keep on edges
+          if (particle.userData.isBottom) {
+            if (Math.abs(particle.position.x) > 35)
+              particle.userData.velocity.x *= -1;
+            if (particle.position.y < -45 || particle.position.y > -20)
+              particle.userData.velocity.y *= -1;
+          } else {
+            const minX = particle.userData.side > 0 ? 20 : -60;
+            const maxX = particle.userData.side > 0 ? 60 : -20;
+            if (particle.position.x < minX || particle.position.x > maxX)
+              particle.userData.velocity.x *= -1;
+            if (Math.abs(particle.position.y) > 25)
+              particle.userData.velocity.y *= -1;
+          }
+          if (Math.abs(particle.position.z) > 15)
+            particle.userData.velocity.z *= -1;
+
+          // Pulse scale
+          const scale = 1 + Math.sin(time * 2 + particle.id) * 0.2;
+          particle.scale.setScalar(scale);
+        });
+
+        // Very subtle camera movement
+        threeCamera.position.x = Math.sin(time * 0.08) * 1.5;
+        threeCamera.position.y = Math.cos(time * 0.1) * 1;
+        threeCamera.lookAt(0, -5, 0);
+
+        threeRenderer.render(threeScene, threeCamera);
+      }
+
+      // Observe hero section for Three.js performance
+      function setupThreeObserver() {
+        const heroSection = document.getElementById("hero-canvas");
+        if (!heroSection) return;
+
+        const heroObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                if (!isThreeVisible) {
+                  isThreeVisible = true;
+                  if (!threeAnimationId) animateThree();
+                }
+              } else {
+                isThreeVisible = false;
+                if (threeAnimationId) {
+                  cancelAnimationFrame(threeAnimationId);
+                  threeAnimationId = null;
+                }
+              }
+            });
+          },
+          { threshold: 0.05 }
+        );
+
+        heroObserver.observe(heroSection.parentElement);
+      }
+
+      // Update Three.js colors on dark mode toggle
+      function updateThreeColors() {
+        if (!threeScene) return;
+
+        const isDark = document.documentElement.classList.contains("dark");
+
+        floatingShapes.forEach((shape) => {
+          shape.material.opacity = isDark ? 0.6 : 0.4;
+        });
+
+        connectionLines.forEach((line) => {
+          line.material.color.setHex(isDark ? 0xffffff : 0x171717);
+        });
+      }
+
+      // Modify toggleDarkMode to update Three.js
+      const originalToggleDarkMode = toggleDarkMode;
+      toggleDarkMode = function () {
+        originalToggleDarkMode();
+        setTimeout(updateThreeColors, 50);
+      };
+
+      // Initialize Three.js on load
+      document.addEventListener("DOMContentLoaded", () => {
+        initThreeJS();
+        setupThreeObserver();
+      });
     </script>
-</body>
+  </body>
 </html>
