@@ -1874,6 +1874,7 @@
             </div>
             <h3 class="text-2xl font-bold text-gray-900">Đang chờ thanh toán</h3>
             <p class="text-3xl font-extrabold text-pink-600">${formatPrice(qrData.amount)}</p>
+            <p class="text-sm text-gray-500" id="status-timer">Kiểm tra trạng thái trong <span class="font-bold text-yellow-600">2:00</span>...</p>
           </div>
 
           <div class="bg-white p-4 rounded-xl border-4 border-gray-200">
@@ -1895,8 +1896,18 @@
             </p>
           </div>
 
-          <div class="text-sm text-gray-500 bg-blue-50 p-4 rounded-lg">
-            ⚠️ Vui lòng chuyển khoản đúng nội dung <strong>${qrData.transfer_code}</strong> để đơn hàng được xử lý tự động
+          <div class="text-sm text-gray-500 bg-blue-50 p-4 rounded-lg space-y-2">
+            <p>⚠️ <strong>Vui lòng chuyển khoản đúng nội dung ${qrData.transfer_code}</strong></p>
+            <p>🕐 Hệ thống kiểm tra <strong>mỗi 2 phút</strong> trong vòng <strong>10 phút</strong></p>
+            <p>⏳ Vui lòng <strong>không đóng trang này</strong> và chờ xác nhận</p>
+          </div>
+
+          <div id="timeout-notice" class="text-sm text-orange-600 bg-orange-50 p-4 rounded-lg hidden">
+            <p class="font-semibold mb-2">⏰ Đã hết thời gian chờ tự động</p>
+            <p>Thông báo ngân hàng có thể đến chậm. Vui lòng bình tĩnh và liên hệ với chúng tôi kèm ảnh chụp giao dịch:</p>
+            <a href="https://www.facebook.com/AcademyTelos" target="_blank" class="text-blue-600 hover:underline font-semibold">
+              📱 Facebook: Academy Telos
+            </a>
           </div>
 
           <button onclick="location.reload()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors">
@@ -1910,6 +1921,9 @@
 
         // Scroll to payment section
         paymentSection.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        // Start order status polling
+        startOrderStatusPolling(qrData.transfer_code.replace('ARD', ''));
       }
 
       function formatPrice(amount) {
@@ -1917,6 +1931,110 @@
           style: 'currency',
           currency: 'VND'
         }).format(amount);
+      }
+
+      let statusPollingInterval = null;
+      let statusPollingTimeout = null;
+      let nextCheckIn = 120;
+
+      function startOrderStatusPolling(orderId) {
+        const maxDuration = 600; // 10 minutes
+        const checkInterval = 120; // Check every 2 minutes
+        let elapsed = 0;
+
+        // Update timer countdown
+        const timerInterval = setInterval(() => {
+          nextCheckIn--;
+          const timerEl = document.getElementById('status-timer');
+          if (timerEl && nextCheckIn > 0) {
+            const minutes = Math.floor(nextCheckIn / 60);
+            const seconds = nextCheckIn % 60;
+            timerEl.innerHTML = `Kiểm tra trạng thái trong <span class="font-bold text-yellow-600">${minutes}:${seconds.toString().padStart(2, '0')}</span>...`;
+          }
+        }, 1000);
+
+        // Check order status
+        statusPollingInterval = setInterval(async () => {
+          elapsed += checkInterval;
+          nextCheckIn = checkInterval;
+
+          try {
+            const response = await fetch(`${CHECKOUT_CONFIG.SITE_URL}/wp-json/wc/v3/orders/${orderId}`, {
+              headers: {
+                'Authorization': 'Basic ' + btoa(CHECKOUT_CONFIG.API_KEY + ':')
+              }
+            });
+
+            if (response.ok) {
+              const order = await response.json();
+
+              // Check if order status changed from 'pending' to 'processing' or 'completed'
+              if (order.status === 'processing' || order.status === 'completed') {
+                clearInterval(statusPollingInterval);
+                clearInterval(timerInterval);
+                clearTimeout(statusPollingTimeout);
+                showPaymentSuccess(orderId);
+                return;
+              }
+            }
+          } catch (error) {
+            console.error('Error checking order status:', error);
+          }
+
+          // Update timer
+          const timerEl = document.getElementById('status-timer');
+          if (timerEl) {
+            const remaining = maxDuration - elapsed;
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            timerEl.innerHTML = `Kiểm tra lại sau <span class="font-bold text-yellow-600">2 phút</span>... (còn ${minutes}:${seconds.toString().padStart(2, '0')})`;
+          }
+        }, checkInterval * 1000);
+
+        // Stop after 10 minutes
+        statusPollingTimeout = setTimeout(() => {
+          clearInterval(statusPollingInterval);
+          clearInterval(timerInterval);
+          showTimeoutNotice();
+        }, maxDuration * 1000);
+      }
+
+      function showPaymentSuccess(orderId) {
+        const qrSection = document.getElementById('qr-payment-section');
+        if (qrSection) {
+          qrSection.innerHTML = `
+            <div class="space-y-6 text-center">
+              <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full">
+                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-2">Thanh toán thành công! 🎉</h3>
+                <p class="text-gray-600">Đơn hàng #${orderId} đã được xác nhận</p>
+              </div>
+              <div class="bg-green-50 p-4 rounded-lg">
+                <p class="text-green-800">✅ Chúng tôi sẽ gửi thông tin chi tiết qua email trong giây lát</p>
+              </div>
+              <button onclick="location.reload()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                Đăng ký đơn hàng mới
+              </button>
+            </div>
+          `;
+          qrSection.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      function showTimeoutNotice() {
+        const timerEl = document.getElementById('status-timer');
+        if (timerEl) {
+          timerEl.innerHTML = '<span class="text-orange-600 font-semibold">⏰ Hết thời gian chờ tự động</span>';
+        }
+
+        const timeoutNotice = document.getElementById('timeout-notice');
+        if (timeoutNotice) {
+          timeoutNotice.classList.remove('hidden');
+        }
       }
     </script>
 
