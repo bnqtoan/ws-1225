@@ -1470,37 +1470,8 @@
             ></div>
 
             <form id="checkout-form" class="space-y-4">
-              <!-- Quantity -->
-              <div class="form-group">
-                <label
-                  class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400"
-                  >Số lượng vé</label
-                >
-                <div class="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onclick="changeQuantity(-1)"
-                    class="w-10 h-10 rounded-lg bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt flex items-center justify-center text-xl font-bold hover:border-brand-pink transition-colors"
-                  >
-                    −
-                  </button>
-                  <input
-                    type="number"
-                    id="quantity"
-                    value="1"
-                    min="1"
-                    readonly
-                    class="w-16 h-10 text-center bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt rounded-lg font-semibold"
-                  />
-                  <button
-                    type="button"
-                    onclick="changeQuantity(1)"
-                    class="w-10 h-10 rounded-lg bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt flex items-center justify-center text-xl font-bold hover:border-brand-pink transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
+              <!-- Hidden Quantity (always 1 - multiple tickets not supported yet) -->
+              <input type="hidden" id="quantity" value="1" />
 
               <!-- Full Name -->
               <div class="form-group">
@@ -1592,21 +1563,8 @@
                 </div>
               </div>
 
-              <!-- Payment Method -->
-              <div class="form-group">
-                <label
-                  for="payment_method"
-                  class="block text-sm font-medium mb-2 text-gray-mid dark:text-gray-400"
-                  >Phương thức thanh toán</label
-                >
-                <select
-                  id="payment_method"
-                  class="w-full px-4 py-3 rounded-xl bg-light dark:bg-dark-alt border border-gray-border dark:border-dark-alt focus:border-brand-pink focus:outline-none transition-colors"
-                >
-                  <option value="bacs">Chuyển khoản ngân hàng</option>
-                  <option value="cod">Thanh toán khi nhận hàng</option>
-                </select>
-              </div>
+              <!-- Hidden Payment Method (only bank transfer supported) -->
+              <input type="hidden" id="payment_method" value="bacs" />
 
               <!-- Total -->
               <div
@@ -1725,13 +1683,6 @@
         } catch (error) {
           console.error("Failed to load product:", error);
         }
-      }
-
-      function changeQuantity(delta) {
-        const input = document.getElementById("quantity");
-        const newVal = Math.max(1, parseInt(input.value) + delta);
-        input.value = newVal;
-        updatePrice();
       }
 
       async function updatePrice() {
@@ -1915,12 +1866,13 @@
         paymentSection.className = "max-w-md mx-auto text-center space-y-6 p-8 bg-white rounded-2xl shadow-xl";
         paymentSection.innerHTML = `
           <div class="space-y-4">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full">
-              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            <div class="relative inline-flex items-center justify-center w-16 h-16">
+              <div class="absolute inset-0 bg-yellow-100 rounded-full animate-pulse"></div>
+              <svg class="relative w-8 h-8 text-yellow-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900">Đơn hàng thành công!</h3>
+            <h3 class="text-2xl font-bold text-gray-900">Đang chờ thanh toán</h3>
             <p class="text-3xl font-extrabold text-pink-600">${formatPrice(qrData.amount)}</p>
           </div>
 
