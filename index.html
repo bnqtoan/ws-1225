@@ -1875,7 +1875,7 @@
             );
 
             // Show QR code payment section instead of redirecting
-            displayQRPayment(data.data.order_id, currentTotal);
+            displayQRPayment(data.data.qr_code);
           } else {
             showCheckoutError(
               data.message || "Đăng ký thất bại. Vui lòng thử lại."
@@ -1905,12 +1905,9 @@
         document.getElementById("checkout-error").classList.add("hidden");
       }
 
-      function displayQRPayment(orderId, amount) {
+      function displayQRPayment(qrData) {
         // Hide the checkout form
         document.getElementById("checkout-form").style.display = "none";
-
-        // Generate VietQR URL
-        const qrUrl = `${CHECKOUT_CONFIG.VIETQR.API_URL}/${CHECKOUT_CONFIG.VIETQR.BANK_ID}/${CHECKOUT_CONFIG.VIETQR.ACCOUNT_NUMBER}/${amount}?accountName=${encodeURIComponent(CHECKOUT_CONFIG.VIETQR.ACCOUNT_NAME)}&addInfo=DH${orderId}`;
 
         // Create payment section
         const paymentSection = document.createElement("div");
@@ -1923,31 +1920,31 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900">Đơn hàng #${orderId}</h3>
-            <p class="text-3xl font-extrabold text-pink-600">${formatPrice(amount)}</p>
+            <h3 class="text-2xl font-bold text-gray-900">Đơn hàng thành công!</h3>
+            <p class="text-3xl font-extrabold text-pink-600">${formatPrice(qrData.amount)}</p>
           </div>
 
           <div class="bg-white p-4 rounded-xl border-4 border-gray-200">
-            <img src="${qrUrl}" alt="QR Code" class="w-full max-w-xs mx-auto" />
+            <img src="${qrData.url}" alt="QR Code" class="w-full max-w-xs mx-auto" />
           </div>
 
           <div class="space-y-2 text-left bg-gray-50 p-4 rounded-lg">
             <p class="text-sm text-gray-600">
-              <span class="font-semibold">Ngân hàng:</span> ${CHECKOUT_CONFIG.VIETQR.BANK_ID.toUpperCase()}
+              <span class="font-semibold">Ngân hàng:</span> ${qrData.bank_id.toUpperCase()}
             </p>
             <p class="text-sm text-gray-600">
-              <span class="font-semibold">Số tài khoản:</span> ${CHECKOUT_CONFIG.VIETQR.ACCOUNT_NUMBER}
+              <span class="font-semibold">Số tài khoản:</span> ${qrData.account_number}
             </p>
             <p class="text-sm text-gray-600">
-              <span class="font-semibold">Chủ tài khoản:</span> ${CHECKOUT_CONFIG.VIETQR.ACCOUNT_NAME}
+              <span class="font-semibold">Chủ tài khoản:</span> ${qrData.account_name}
             </p>
             <p class="text-sm text-gray-600">
-              <span class="font-semibold">Nội dung:</span> <span class="font-mono bg-yellow-100 px-2 py-1 rounded">DH${orderId}</span>
+              <span class="font-semibold">Nội dung:</span> <span class="font-mono bg-yellow-100 px-2 py-1 rounded">${qrData.transfer_code}</span>
             </p>
           </div>
 
           <div class="text-sm text-gray-500 bg-blue-50 p-4 rounded-lg">
-            ⚠️ Vui lòng chuyển khoản đúng nội dung để đơn hàng được xử lý tự động
+            ⚠️ Vui lòng chuyển khoản đúng nội dung <strong>${qrData.transfer_code}</strong> để đơn hàng được xử lý tự động
           </div>
 
           <button onclick="location.reload()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors">
