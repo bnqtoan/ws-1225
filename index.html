@@ -304,6 +304,11 @@
             margin-left: 2px;
         }
         
+        .typing-container.paused .typing-cursor {
+            animation: none;
+            opacity: 1;
+        }
+        
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -983,11 +988,18 @@
         let charIndex = 0;
         let isDeleting = false;
         let isPaused = false;
+        let isVisible = false; // Will be set by observer
+        let typingTimeout = null;
         const typingSpeed = 80;
         const deletingSpeed = 50;
         const pauseDuration = 2500;
         
         function typeEffect() {
+            // Stop if not visible
+            if (!isVisible) {
+                return;
+            }
+            
             const typingElement = document.getElementById('typing-text');
             if (!typingElement) return;
             
@@ -995,7 +1007,7 @@
             const fullText = currentPhrase.text + currentPhrase.highlight;
             
             if (isPaused) {
-                setTimeout(typeEffect, pauseDuration);
+                typingTimeout = setTimeout(typeEffect, pauseDuration);
                 isPaused = false;
                 isDeleting = true;
                 return;
@@ -1021,7 +1033,7 @@
                     isDeleting = false;
                     phraseIndex = (phraseIndex + 1) % typingPhrases.length;
                     charIndex = 0;
-                    setTimeout(typeEffect, 500);
+                    typingTimeout = setTimeout(typeEffect, 500);
                     return;
                 }
             } else {
@@ -1030,17 +1042,49 @@
                 
                 if (charIndex > fullText.length) {
                     isPaused = true;
-                    setTimeout(typeEffect, 100);
+                    typingTimeout = setTimeout(typeEffect, 100);
                     return;
                 }
             }
             
             const speed = isDeleting ? deletingSpeed : typingSpeed;
-            setTimeout(typeEffect, speed);
+            typingTimeout = setTimeout(typeEffect, speed);
+        }
+        
+        // Observe typing container visibility
+        function setupTypingObserver() {
+            const typingContainer = document.querySelector('.typing-container');
+            if (!typingContainer) return;
+            
+            const typingObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Resume typing when visible
+                        typingContainer.classList.remove('paused');
+                        if (!isVisible) {
+                            isVisible = true;
+                            typeEffect();
+                        }
+                    } else {
+                        // Pause typing when off screen
+                        isVisible = false;
+                        typingContainer.classList.add('paused');
+                        if (typingTimeout) {
+                            clearTimeout(typingTimeout);
+                            typingTimeout = null;
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            typingObserver.observe(typingContainer);
         }
         
         // Start typing effect on load
         document.addEventListener('DOMContentLoaded', () => {
+            setupTypingObserver();
+            // Initial start with small delay - observer will handle visibility
+            isVisible = true;
             setTimeout(typeEffect, 800);
         });
         
