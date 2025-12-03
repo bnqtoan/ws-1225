@@ -2007,22 +2007,42 @@
           const data = await response.json();
 
           if (response.ok && data.success) {
-            showCheckoutSuccess(
-              "Đăng ký thành công! Vui lòng quét mã QR để thanh toán."
-            );
+            // Check if order is free (zero total)
+            if (data.data.is_free) {
+              showCheckoutSuccess(
+                "🎉 Đăng ký thành công! Đơn hàng của bạn đã được xác nhận."
+              );
 
-            window.dispatchEvent(
-              new CustomEvent("vt:order:success", {
-                detail: {
-                  orderId: data.data.order_id,
-                  redirectUrl: data.data.redirect,
-                  orderData: data.data,
-                },
-              })
-            );
+              window.dispatchEvent(
+                new CustomEvent("vt:order:success", {
+                  detail: {
+                    orderId: data.data.order_id,
+                    isFree: true,
+                    orderData: data.data,
+                  },
+                })
+              );
 
-            // Show QR code payment section instead of redirecting
-            displayQRPayment(data.data.qr_code);
+              // Show success message without QR code
+              displayFreeOrderSuccess(data.data.order_id);
+            } else {
+              showCheckoutSuccess(
+                "Đăng ký thành công! Vui lòng quét mã QR để thanh toán."
+              );
+
+              window.dispatchEvent(
+                new CustomEvent("vt:order:success", {
+                  detail: {
+                    orderId: data.data.order_id,
+                    redirectUrl: data.data.redirect,
+                    orderData: data.data,
+                  },
+                })
+              );
+
+              // Show QR code payment section
+              displayQRPayment(data.data.qr_code);
+            }
           } else {
             showCheckoutError(
               data.message || "Đăng ký thất bại. Vui lòng thử lại."
@@ -2133,6 +2153,49 @@
 
         // Start order status polling
         startOrderStatusPolling(qrData.transfer_code.replace("ARD", ""));
+      }
+
+      function displayFreeOrderSuccess(orderId) {
+        // Hide the checkout form
+        document.getElementById("checkout-form").style.display = "none";
+
+        // Create success section
+        const successSection = document.createElement("div");
+        successSection.id = "free-order-success-section";
+        successSection.className =
+          "max-w-md mx-auto text-center space-y-6 p-8 bg-white rounded-2xl shadow-xl";
+        successSection.innerHTML = `
+          <div class="space-y-4">
+            <div class="relative inline-flex items-center justify-center w-20 h-20">
+              <div class="absolute inset-0 bg-green-100 rounded-full"></div>
+              <svg class="relative w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-3xl font-bold text-gray-900 mb-2">Đăng ký thành công! 🎉</h3>
+              <p class="text-gray-600">Đơn hàng #${orderId} đã được xác nhận</p>
+            </div>
+            <div class="bg-green-50 p-4 rounded-lg">
+              <p class="text-green-800 font-semibold">✅ 100% giảm giá - Miễn phí hoàn toàn</p>
+              <p class="text-green-700 text-sm mt-2">Chúng tôi sẽ gửi thông tin chi tiết qua email trong giây lát</p>
+            </div>
+          </div>
+
+          <button onclick="location.reload()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+            Đăng ký đơn hàng mới
+          </button>
+        `;
+
+        // Insert success section after pricing section
+        const pricingSection = document.getElementById("pricing");
+        pricingSection.appendChild(successSection);
+
+        // Scroll to success section
+        successSection.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        // Trigger confetti celebration
+        triggerFlyingEmojis();
       }
 
       function formatPrice(amount) {
