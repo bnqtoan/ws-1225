@@ -97,6 +97,13 @@
         background-clip: text;
       }
 
+      .text-gradient-purple {
+        background: linear-gradient(135deg, #7c3aed, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
       /* Card styles */
       .telos-card {
         background: #ffffff;
@@ -205,6 +212,18 @@
       .dark .badge-indigo {
         background: rgba(93, 79, 184, 0.2);
         color: #9d8fff;
+      }
+
+      .badge-purple {
+        background: rgba(147, 51, 234, 0.1);
+        color: #7c3aed;
+        border-radius: 100px;
+        font-weight: 600;
+      }
+
+      .dark .badge-purple {
+        background: rgba(147, 51, 234, 0.2);
+        color: #a78bfa;
       }
 
       /* Tab styles */
@@ -1320,6 +1339,80 @@
               class="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg inline-flex items-center gap-2"
             >
               Đăng ký ngay — 249K
+              <svg
+                class="w-4 h-4 sm:w-5 sm:h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Landing Page Options Section -->
+    <section
+      id="landing-showcase"
+      class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-dark"
+    >
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12 fade-up">
+          <span class="badge-purple px-4 py-2 text-sm inline-block mb-4"
+            >META</span
+          >
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            Landing này là
+            <span class="text-gradient-purple">1 trong các options</span>
+          </h2>
+          <p class="text-lg text-gray-mid dark:text-gray-400 max-w-2xl mx-auto">
+            Trang bạn đang xem được AI tạo ra trong vài phút — cùng với các
+            phiên bản khác để chọn lựa tốt nhất
+          </p>
+        </div>
+
+        <div class="fade-up">
+          <div
+            class="rounded-2xl overflow-hidden shadow-2xl border border-gray-border dark:border-dark-alt"
+          >
+            <div style="position: relative; padding-top: 56.25%">
+              <iframe
+                src="https://iframe.mediadelivery.net/embed/471815/e5e4573a-0968-47e2-b720-d96b51d4c945?autoplay=false&loop=false&muted=false&preload=false&responsive=true"
+                loading="lazy"
+                style="
+                  border: 0;
+                  position: absolute;
+                  top: 0;
+                  height: 100%;
+                  width: 100%;
+                "
+                allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+                allowfullscreen="true"
+              >
+              </iframe>
+            </div>
+          </div>
+
+          <!-- Video CTA -->
+          <div class="mt-8 text-center">
+            <p class="text-gray-mid dark:text-gray-400 mb-4">
+              ✨
+              <span class="font-semibold text-dark dark:text-white"
+                >Đây chính là cách bạn sẽ làm việc trong workshop</span
+              >
+            </p>
+            <a
+              href="#pricing"
+              class="btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg inline-flex items-center gap-2"
+            >
+              Học với 49K
               <svg
                 class="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
