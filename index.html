@@ -2041,7 +2041,7 @@
               );
 
               // Show QR code payment section
-              displayQRPayment(data.data.qr_code);
+              displayQRPayment(data.data.qr_code, data.data.order_id);
             }
           } else {
             showCheckoutError(
@@ -2072,7 +2072,7 @@
         document.getElementById("checkout-error").classList.add("hidden");
       }
 
-      function displayQRPayment(qrData) {
+      function displayQRPayment(qrData, orderId) {
         // Hide the checkout form
         document.getElementById("checkout-form").style.display = "none";
 
@@ -2151,8 +2151,8 @@
         // Scroll to payment section
         paymentSection.scrollIntoView({ behavior: "smooth", block: "center" });
 
-        // Start order status polling
-        startOrderStatusPolling(qrData.transfer_code.replace("ARD", ""));
+        // Start order status polling with the order ID
+        startOrderStatusPolling(orderId);
       }
 
       function displayFreeOrderSuccess(orderId) {
@@ -2234,21 +2234,24 @@
 
           try {
             const response = await fetch(
-              `${CHECKOUT_CONFIG.SITE_URL}/wp-json/wc/v3/orders/${orderId}`,
+              `${CHECKOUT_CONFIG.API_URL}/order-status/${orderId}`,
               {
+                method: "GET",
                 headers: {
-                  Authorization: "Basic " + btoa(CHECKOUT_CONFIG.API_KEY + ":"),
+                  "Content-Type": "application/json",
+                  "X-VT-API-Key": CHECKOUT_CONFIG.API_KEY,
                 },
               }
             );
 
             if (response.ok) {
-              const order = await response.json();
+              const data = await response.json();
 
-              // Check if order status changed from 'pending' to 'processing' or 'completed'
+              // Check if order status changed to 'processing' or 'completed'
               if (
-                order.status === "processing" ||
-                order.status === "completed"
+                data.success &&
+                (data.data.status === "processing" ||
+                  data.data.status === "completed")
               ) {
                 clearInterval(statusPollingInterval);
                 clearInterval(timerInterval);
